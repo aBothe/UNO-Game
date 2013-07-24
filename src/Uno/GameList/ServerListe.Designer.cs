@@ -1,4 +1,4 @@
-﻿namespace Uno
+﻿namespace Uno.GameList
 {
     partial class ServerListe
     {

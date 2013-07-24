@@ -1,3 +1,4 @@
 *.suo
 src/Uno/bin
 src/Uno/obj
+*.userprefs

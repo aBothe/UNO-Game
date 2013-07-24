@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Uno
+namespace Uno.GameList
 {
     public partial class ServerListe : Form
     {
