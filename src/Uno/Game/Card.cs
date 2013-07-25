@@ -32,6 +32,13 @@ namespace Uno.Game
 		public CardColor Color;
 		public CardCaption Caption;
 
+        public Card(CardColor Color, CardCaption Caption) {
+
+            this.Color = Color;
+            this.Caption = Caption;
+        
+        }
+
 		public ushort ToHash()
 		{
 			return (ushort)(((byte)Color << 8) + (byte)Caption);
@@ -41,6 +48,8 @@ namespace Uno.Game
 		{
 			return new Card { Color = (CardColor)(hash >> 8), Caption = (CardCaption)hash };
 		}
+
+     
 	}
 
 	public enum CardColor : byte
@@ -54,6 +63,7 @@ namespace Uno.Game
 
 	public enum CardCaption : byte
 	{
+        Zero,
 		One,
 		Two,
 		Three,
@@ -69,13 +79,16 @@ namespace Uno.Game
 		/// </summary>
 		Take2,
 		RevertDirectionAndNewColor,
+        SkipNextPlayer,
 
 		/// <summary>
 		/// Black
 		/// </summary>
 		Take4,
 		WishColor,
-		SkipNextPlayer,
+		
 	}
+
+
 }
 

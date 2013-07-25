@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Uno.Game;
 
 namespace Uno.GameList
 {
@@ -28,15 +29,22 @@ namespace Uno.GameList
 
         private void BnJoin_Click(object sender, EventArgs e)
         {
-            if (liste.Count == 0)
-            {
-                MessageBox.Show("Es sind keine Spiele verfügbar",
-                 "Fehler",
-                 MessageBoxButtons.OK,
-                 MessageBoxIcon.Warning,
-                 MessageBoxDefaultButton.Button3);
-               
-            }
+
+            Deck deck = Deck.getInstance();
+
+           
+                lbServer.Items.Add(deck.CardList.Count);
+            
+
+                if (liste.Count == 0)
+                {
+                    MessageBox.Show("Es sind keine Spiele verfügbar",
+                     "Fehler",
+                     MessageBoxButtons.OK,
+                     MessageBoxIcon.Warning,
+                     MessageBoxDefaultButton.Button3);
+
+                }
         }
 
         private void BnCreate_Click(object sender, EventArgs e)

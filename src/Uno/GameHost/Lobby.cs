@@ -5,11 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Uno.Game;
 
 namespace Uno
 {
     public partial class Lobby : Form
     {
+        List<Player> PlayerList = new List<Player>();
         public Lobby()
         {
             InitializeComponent();
