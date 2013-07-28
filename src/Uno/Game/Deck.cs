@@ -114,12 +114,13 @@ namespace Uno.Game
             }
         }
 
+		public const int InitialCardsPerPlayer = 7;
         public List<Card> giveFirstHand() {
 
-            List<Card> hand = new List<Card>();
-            for (int i = 0; i < 7; i++)
+            var hand = new List<Card>();
+			var rng = new Random();
+			for (int i = 0; i < InitialCardsPerPlayer; i++)
             {
-                Random rng = new Random();
                 int n = rng.Next(CardList.Count);
                 hand.Add(CardList[n]);
                 CardList.RemoveAt(n);
