@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\GameConnection.cs" />
     <Compile Include="GameList\GameHostEntry.cs" />
     <Compile Include="Game\Deck.cs" />
     <Compile Include="Program.cs" />
