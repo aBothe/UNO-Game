@@ -3,18 +3,41 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using Uno.Game;
+using Uno.GameHost;
 
 namespace Uno
 {
     public partial class Lobby : Form
     {
 		#region Properties
-        List<Player> PlayerList = new List<Player>();
+		List<Player> PlayerList = new List<Player>();
+		static bool IsAdmin { get { return Host.IsHosting; } }
 
 		#endregion
+
+		#region Init / Constructor
+		public static Lobby CreateNewGame(string nickName)
+		{
+			var lobby = new Lobby();
+
+			lobby.Show();
+			return lobby;
+		}
+
+		public static Lobby TryJoinGame(IPEndPoint ip, string nickName)
+		{
+			// Connect to server, ask if players are available (indirectly - you'll become kicked/rejected otherwise)
+			// If connect happened successfully and connection is established, show lobby
+			// -- Always expect to be kicked/disconnected for no obvious reasons!
+			var lobby = new Lobby();
+
+			lobby.Show();
+			return lobby;
+		}
 
         Lobby()
         {
@@ -23,29 +46,13 @@ namespace Uno
 
         private void Lobby_Load(object sender, EventArgs e)
         {
-           listView1.Dock = DockStyle.Fill;
-            panel1.Dock = DockStyle.Fill;
-
-            setGUI();
-        }
-
-        private void setGUI() {
-
-            listView1.View = View.Details;		// Report vs. Details
-            listView1.LabelEdit = true;		// EditModus
-            listView1.AllowColumnReorder = true;	// Spalten verschieben
-            listView1.FullRowSelect = true;		// zeilenweise markieren
-            listView1.GridLines = true;		// Gitterlinien
-            listView1.CheckBoxes = true;
-
-            listView1.Columns.Add("Bereit", 50, HorizontalAlignment.Left);
-            listView1.Columns.Add("IPAdresse", 200, HorizontalAlignment.Left);
-
-            ListViewItem item1 = new ListViewItem();  // 0 = 1. Bild
-            item1.Checked = true;
-            item1.SubItems.Add("192.168.178.2");	// next Column
-            listView1.Items.Add(item1);
 
         }
+		#endregion
+
+		private void button_ReturnToLobby_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
     }
 }

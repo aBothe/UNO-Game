@@ -28,100 +28,185 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.BnReady = new System.Windows.Forms.Button();
-            this.BnStart = new System.Windows.Forms.Button();
-            this.lnName = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.listView1, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 32);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70.56604F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29.43396F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(371, 265);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.BnStart);
-            this.panel1.Controls.Add(this.BnReady);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 190);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(365, 72);
-            this.panel1.TabIndex = 1;
-            // 
-            // BnReady
-            // 
-            this.BnReady.Location = new System.Drawing.Point(45, 26);
-            this.BnReady.Name = "BnReady";
-            this.BnReady.Size = new System.Drawing.Size(75, 23);
-            this.BnReady.TabIndex = 0;
-            this.BnReady.Text = "Bereit";
-            this.BnReady.UseVisualStyleBackColor = true;
-            // 
-            // BnStart
-            // 
-            this.BnStart.Location = new System.Drawing.Point(255, 26);
-            this.BnStart.Name = "BnStart";
-            this.BnStart.Size = new System.Drawing.Size(75, 23);
-            this.BnStart.TabIndex = 1;
-            this.BnStart.Text = "Beginnen";
-            this.BnStart.UseVisualStyleBackColor = true;
-            // 
-            // lnName
-            // 
-            this.lnName.AutoSize = true;
-            this.lnName.Location = new System.Drawing.Point(147, 16);
-            this.lnName.Name = "lnName";
-            this.lnName.Size = new System.Drawing.Size(88, 13);
-            this.lnName.TabIndex = 1;
-            this.lnName.Text = "Name der Spieler";
-            // 
-            // listView1
-            // 
-            this.listView1.Location = new System.Drawing.Point(3, 3);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(121, 97);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            // 
-            // Lobby
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 299);
-            this.Controls.Add(this.lnName);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "Lobby";
-            this.Text = "Lobby";
-            this.Load += new System.EventHandler(this.Lobby_Load);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			System.Windows.Forms.Label label1;
+			System.Windows.Forms.Label label2;
+			this.button_StartGame = new System.Windows.Forms.Button();
+			this.button_Ready = new System.Windows.Forms.Button();
+			this.list_Players = new System.Windows.Forms.ListView();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.text_ChatLog = new System.Windows.Forms.TextBox();
+			this.text_ChatMessage = new System.Windows.Forms.TextBox();
+			this.button_SendChat = new System.Windows.Forms.Button();
+			this.button_ReturnToLobby = new System.Windows.Forms.Button();
+			this.panel_Admin = new System.Windows.Forms.Panel();
+			this.button_KickPlayers = new System.Windows.Forms.Button();
+			label1 = new System.Windows.Forms.Label();
+			label2 = new System.Windows.Forms.Label();
+			this.panel1.SuspendLayout();
+			this.panel_Admin.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// button_StartGame
+			// 
+			this.button_StartGame.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.button_StartGame.Enabled = false;
+			this.button_StartGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button_StartGame.Location = new System.Drawing.Point(71, 29);
+			this.button_StartGame.Name = "button_StartGame";
+			this.button_StartGame.Size = new System.Drawing.Size(117, 23);
+			this.button_StartGame.TabIndex = 1;
+			this.button_StartGame.Text = "Start Game";
+			this.button_StartGame.UseVisualStyleBackColor = true;
+			// 
+			// button_Ready
+			// 
+			this.button_Ready.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.button_Ready.Location = new System.Drawing.Point(397, 327);
+			this.button_Ready.Name = "button_Ready";
+			this.button_Ready.Size = new System.Drawing.Size(75, 23);
+			this.button_Ready.TabIndex = 0;
+			this.button_Ready.Text = "Ready";
+			this.button_Ready.UseVisualStyleBackColor = true;
+			// 
+			// list_Players
+			// 
+			this.list_Players.Location = new System.Drawing.Point(12, 25);
+			this.list_Players.Name = "list_Players";
+			this.list_Players.Size = new System.Drawing.Size(191, 168);
+			this.list_Players.TabIndex = 2;
+			this.list_Players.UseCompatibleStateImageBehavior = false;
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			label1.Location = new System.Drawing.Point(12, 9);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(95, 13);
+			label1.TabIndex = 3;
+			label1.Text = "Waiting Players";
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			label2.Location = new System.Drawing.Point(209, 9);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(33, 13);
+			label2.TabIndex = 4;
+			label2.Text = "Chat";
+			// 
+			// panel1
+			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Controls.Add(this.button_SendChat);
+			this.panel1.Controls.Add(this.text_ChatMessage);
+			this.panel1.Controls.Add(this.text_ChatLog);
+			this.panel1.Location = new System.Drawing.Point(212, 25);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(260, 290);
+			this.panel1.TabIndex = 5;
+			// 
+			// text_ChatLog
+			// 
+			this.text_ChatLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.text_ChatLog.BackColor = System.Drawing.Color.White;
+			this.text_ChatLog.Location = new System.Drawing.Point(0, 0);
+			this.text_ChatLog.Multiline = true;
+			this.text_ChatLog.Name = "text_ChatLog";
+			this.text_ChatLog.ReadOnly = true;
+			this.text_ChatLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.text_ChatLog.Size = new System.Drawing.Size(260, 264);
+			this.text_ChatLog.TabIndex = 0;
+			// 
+			// text_ChatMessage
+			// 
+			this.text_ChatMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.text_ChatMessage.Location = new System.Drawing.Point(0, 270);
+			this.text_ChatMessage.Name = "text_ChatMessage";
+			this.text_ChatMessage.Size = new System.Drawing.Size(211, 20);
+			this.text_ChatMessage.TabIndex = 1;
+			// 
+			// button_SendChat
+			// 
+			this.button_SendChat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.button_SendChat.Location = new System.Drawing.Point(217, 269);
+			this.button_SendChat.Name = "button_SendChat";
+			this.button_SendChat.Size = new System.Drawing.Size(43, 21);
+			this.button_SendChat.TabIndex = 6;
+			this.button_SendChat.Text = "Say";
+			this.button_SendChat.UseVisualStyleBackColor = true;
+			// 
+			// button_ReturnToLobby
+			// 
+			this.button_ReturnToLobby.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.button_ReturnToLobby.Location = new System.Drawing.Point(12, 327);
+			this.button_ReturnToLobby.Name = "button_ReturnToLobby";
+			this.button_ReturnToLobby.Size = new System.Drawing.Size(104, 23);
+			this.button_ReturnToLobby.TabIndex = 6;
+			this.button_ReturnToLobby.Text = "Return to Lobby";
+			this.button_ReturnToLobby.UseVisualStyleBackColor = true;
+			this.button_ReturnToLobby.Click += new System.EventHandler(this.button_ReturnToLobby_Click);
+			// 
+			// panel_Admin
+			// 
+			this.panel_Admin.Controls.Add(this.button_KickPlayers);
+			this.panel_Admin.Controls.Add(this.button_StartGame);
+			this.panel_Admin.Location = new System.Drawing.Point(12, 199);
+			this.panel_Admin.Name = "panel_Admin";
+			this.panel_Admin.Size = new System.Drawing.Size(191, 116);
+			this.panel_Admin.TabIndex = 7;
+			// 
+			// button_KickPlayers
+			// 
+			this.button_KickPlayers.Location = new System.Drawing.Point(71, 0);
+			this.button_KickPlayers.Name = "button_KickPlayers";
+			this.button_KickPlayers.Size = new System.Drawing.Size(120, 23);
+			this.button_KickPlayers.TabIndex = 8;
+			this.button_KickPlayers.Text = "Kick selected players";
+			this.button_KickPlayers.UseVisualStyleBackColor = true;
+			// 
+			// Lobby
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.White;
+			this.ClientSize = new System.Drawing.Size(484, 362);
+			this.Controls.Add(this.panel_Admin);
+			this.Controls.Add(this.button_ReturnToLobby);
+			this.Controls.Add(this.panel1);
+			this.Controls.Add(label2);
+			this.Controls.Add(label1);
+			this.Controls.Add(this.button_Ready);
+			this.Controls.Add(this.list_Players);
+			this.MinimumSize = new System.Drawing.Size(500, 400);
+			this.Name = "Lobby";
+			this.Text = "Game Lobby";
+			this.Load += new System.EventHandler(this.Lobby_Load);
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
+			this.panel_Admin.ResumeLayout(false);
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button BnStart;
-        private System.Windows.Forms.Button BnReady;
-        private System.Windows.Forms.Label lnName;
-        private System.Windows.Forms.ListView listView1;
+		private System.Windows.Forms.Button button_StartGame;
+		private System.Windows.Forms.Button button_Ready;
+		private System.Windows.Forms.ListView list_Players;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.TextBox text_ChatMessage;
+		private System.Windows.Forms.TextBox text_ChatLog;
+		private System.Windows.Forms.Button button_SendChat;
+		private System.Windows.Forms.Button button_ReturnToLobby;
+		private System.Windows.Forms.Panel panel_Admin;
+		private System.Windows.Forms.Button button_KickPlayers;
     }
 }

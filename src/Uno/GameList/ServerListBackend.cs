@@ -34,35 +34,6 @@ using System.Collections.Generic;
 
 namespace Uno.GameList
 {
-	public class GameHostEntry
-	{
-		public int PlayerCount;
-		public int MaxPlayers;
-		public GameState State;
-		public IPEndPoint Address;
-
-		public override bool Equals (object obj)
-		{
-			var o = obj as GameHostEntry;
-			return o != null &&	o.Address.Equals (Address);
-		}
-
-		public override string ToString ()
-		{
-			string msg;
-			switch (State) {
-				case GameState.WaitingForPlayers:
-				case GameState.GameFinished:
-					msg = "Open";
-					break;
-				default:
-					msg = "Closed";
-					break;
-			}
-			return string.Format ("IP {0} ({1}/{2} Players, {3})", Address.Address, PlayerCount, MaxPlayers, State);
-		}
-	}
-
 	public class ServerListBackend
 	{
 		#region Properties
@@ -96,6 +67,31 @@ namespace Uno.GameList
 			udp.Send (new []{(byte)InteractionMessage.PingRequest }, 1, multicastEndpoint);
 		}
 
+		static byte[] BuildHostInfo()
+		{
+			if (Host.IsHosting)
+			{
+				var host = Host.Instance;
+				using (var ms = new MemoryStream())
+				using (var w = new BinaryWriter(ms))
+				{
+					w.Write((byte)InteractionMessage.PingAnswer);
+					w.Write(host.PlayerCount);
+					w.Write(host.MaxPlayers);
+					w.Write((byte)host.State);
+					return ms.GetBuffer();
+				}
+			}
+			return null;
+		}
+
+		public void SendHostUpdate()
+		{
+			var d = BuildHostInfo();
+			if (d != null)
+				udp.Send(d, d.Length, multicastEndpoint);
+		}
+
 		void listenerTh()
 		{
 			while(true)
@@ -105,17 +101,9 @@ namespace Uno.GameList
 
 				switch ((InteractionMessage)data [0]) {
 					case InteractionMessage.PingRequest:
-						if (Host.IsHosting) {
-							var host = Host.Instance;
-							using (var ms = new MemoryStream ())
-							using (var w = new BinaryWriter (ms)) {
-								w.Write ((byte)InteractionMessage.PingAnswer);
-								w.Write (host.PlayerCount);
-								w.Write (host.MaxPlayers);
-								w.Write ((byte)host.State);
-								udp.Send (ms.GetBuffer (), (int)ms.Length, targetAddress);
-							}
-						}
+						var d = BuildHostInfo();
+						if (d != null)
+							udp.Send(d, d.Length, multicastEndpoint);
 						break;
 					case InteractionMessage.PingAnswer:
 						using (var ms = new MemoryStream (data))

@@ -48,6 +48,7 @@ namespace Uno.GameHost
 		WaitingForPlayers,
 		Playing,
 		GameFinished,
+		ShuttingDown,
 	}
 
 	/// <summary>

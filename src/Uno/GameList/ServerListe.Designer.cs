@@ -28,89 +28,120 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.lbServer = new System.Windows.Forms.ListBox();
-            this.BnJoin = new System.Windows.Forms.Button();
-            this.BnCreate = new System.Windows.Forms.Button();
-            this.pnButton = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.pnButton.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.pnButton, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lbServer, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(99, 30);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 66.90392F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.09608F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(440, 281);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // lbServer
-            // 
-            this.lbServer.FormattingEnabled = true;
-            this.lbServer.Location = new System.Drawing.Point(3, 3);
-            this.lbServer.Name = "lbServer";
-            this.lbServer.Size = new System.Drawing.Size(120, 95);
-            this.lbServer.TabIndex = 1;
-            // 
-            // BnJoin
-            // 
-            this.BnJoin.Location = new System.Drawing.Point(61, 32);
-            this.BnJoin.Name = "BnJoin";
-            this.BnJoin.Size = new System.Drawing.Size(75, 23);
-            this.BnJoin.TabIndex = 0;
-            this.BnJoin.Text = "Beitreten";
-            this.BnJoin.UseVisualStyleBackColor = true;
-            this.BnJoin.Click += new System.EventHandler(this.BnJoin_Click);
-            // 
-            // BnCreate
-            // 
-            this.BnCreate.Location = new System.Drawing.Point(341, 32);
-            this.BnCreate.Name = "BnCreate";
-            this.BnCreate.Size = new System.Drawing.Size(75, 23);
-            this.BnCreate.TabIndex = 1;
-            this.BnCreate.Text = "Erstellen";
-            this.BnCreate.UseVisualStyleBackColor = true;
-            this.BnCreate.Click += new System.EventHandler(this.BnCreate_Click);
-            // 
-            // pnButton
-            // 
-            this.pnButton.Controls.Add(this.BnCreate);
-            this.pnButton.Controls.Add(this.BnJoin);
-            this.pnButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnButton.Location = new System.Drawing.Point(3, 191);
-            this.pnButton.Name = "pnButton";
-            this.pnButton.Size = new System.Drawing.Size(434, 87);
-            this.pnButton.TabIndex = 0;
-            // 
-            // ServerListe
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(530, 361);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "ServerListe";
-            this.Text = "ServerListe";
-            this.Load += new System.EventHandler(this.ServerListe_Load);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.pnButton.ResumeLayout(false);
-            this.ResumeLayout(false);
+			System.Windows.Forms.Label label1;
+			System.Windows.Forms.Label label2;
+			this.button_Create = new System.Windows.Forms.Button();
+			this.button_Join = new System.Windows.Forms.Button();
+			this.list_Servers = new System.Windows.Forms.ListBox();
+			this.text_Nick = new System.Windows.Forms.TextBox();
+			this.button_Refresh = new System.Windows.Forms.Button();
+			label1 = new System.Windows.Forms.Label();
+			label2 = new System.Windows.Forms.Label();
+			this.SuspendLayout();
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			label1.Location = new System.Drawing.Point(12, 9);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(63, 13);
+			label1.TabIndex = 2;
+			label1.Text = "Nickname";
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			label2.Location = new System.Drawing.Point(12, 48);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(101, 13);
+			label2.TabIndex = 4;
+			label2.Text = "Available Games";
+			// 
+			// button_Create
+			// 
+			this.button_Create.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.button_Create.Location = new System.Drawing.Point(211, 294);
+			this.button_Create.Name = "button_Create";
+			this.button_Create.Size = new System.Drawing.Size(80, 22);
+			this.button_Create.TabIndex = 1;
+			this.button_Create.Text = "Create Game";
+			this.button_Create.UseVisualStyleBackColor = true;
+			this.button_Create.Click += new System.EventHandler(this.Click_CreateGame);
+			// 
+			// button_Join
+			// 
+			this.button_Join.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.button_Join.Location = new System.Drawing.Point(125, 294);
+			this.button_Join.Name = "button_Join";
+			this.button_Join.Size = new System.Drawing.Size(80, 22);
+			this.button_Join.TabIndex = 0;
+			this.button_Join.Text = "Join Game";
+			this.button_Join.UseVisualStyleBackColor = true;
+			this.button_Join.Click += new System.EventHandler(this.Click_JoinGame);
+			// 
+			// list_Servers
+			// 
+			this.list_Servers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.list_Servers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.list_Servers.FormattingEnabled = true;
+			this.list_Servers.Location = new System.Drawing.Point(12, 64);
+			this.list_Servers.Name = "list_Servers";
+			this.list_Servers.Size = new System.Drawing.Size(305, 223);
+			this.list_Servers.TabIndex = 1;
+			// 
+			// text_Nick
+			// 
+			this.text_Nick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.text_Nick.Location = new System.Drawing.Point(12, 25);
+			this.text_Nick.Name = "text_Nick";
+			this.text_Nick.Size = new System.Drawing.Size(305, 20);
+			this.text_Nick.TabIndex = 3;
+			this.text_Nick.TextChanged += new System.EventHandler(this.text_Nick_TextChanged);
+			// 
+			// button_Refresh
+			// 
+			this.button_Refresh.Location = new System.Drawing.Point(44, 294);
+			this.button_Refresh.Name = "button_Refresh";
+			this.button_Refresh.Size = new System.Drawing.Size(75, 23);
+			this.button_Refresh.TabIndex = 5;
+			this.button_Refresh.Text = "Refresh";
+			this.button_Refresh.UseVisualStyleBackColor = true;
+			this.button_Refresh.Click += new System.EventHandler(this.Click_Refresh);
+			// 
+			// ServerListe
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.White;
+			this.ClientSize = new System.Drawing.Size(329, 328);
+			this.Controls.Add(this.button_Refresh);
+			this.Controls.Add(label2);
+			this.Controls.Add(this.text_Nick);
+			this.Controls.Add(label1);
+			this.Controls.Add(this.button_Create);
+			this.Controls.Add(this.button_Join);
+			this.Controls.Add(this.list_Servers);
+			this.DoubleBuffered = true;
+			this.MaximizeBox = false;
+			this.Name = "ServerListe";
+			this.Text = "UNO";
+			this.Load += new System.EventHandler(this.ServerListe_Load);
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.ListBox lbServer;
-        private System.Windows.Forms.Panel pnButton;
-        private System.Windows.Forms.Button BnCreate;
-        private System.Windows.Forms.Button BnJoin;
+		private System.Windows.Forms.ListBox list_Servers;
+        private System.Windows.Forms.Button button_Create;
+		private System.Windows.Forms.Button button_Join;
+		private System.Windows.Forms.TextBox text_Nick;
+		private System.Windows.Forms.Button button_Refresh;
     }
 }
