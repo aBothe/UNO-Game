@@ -40,6 +40,27 @@ namespace Uno.GameList
 		public int MaxPlayers;
 		public GameState State;
 		public IPEndPoint Address;
+
+		public override bool Equals (object obj)
+		{
+			var o = obj as GameHostEntry;
+			return o != null &&	o.Address.Equals (Address);
+		}
+
+		public override string ToString ()
+		{
+			string msg;
+			switch (State) {
+				case GameState.WaitingForPlayers:
+				case GameState.GameFinished:
+					msg = "Open";
+					break;
+				default:
+					msg = "Closed";
+					break;
+			}
+			return string.Format ("IP {0} ({1}/{2} Players, {3})", Address.Address, PlayerCount, MaxPlayers, State);
+		}
 	}
 
 	public class ServerListBackend
@@ -49,13 +70,7 @@ namespace Uno.GameList
 		internal static readonly IPEndPoint multicastEndpoint;
 		UdpClient udp;
 
-		List<GameHostEntry> lastHosts = new List<GameHostEntry>();
 		public event Action<GameHostEntry> EntryReceived;
-
-		public IEnumerable<GameHostEntry> LastHosts
-		{
-			get{ return lastHosts; }
-		}
 		#endregion
 
 		static ServerListBackend()
@@ -78,7 +93,6 @@ namespace Uno.GameList
 
 		public void SendExistenceRequest()
 		{
-			lastHosts.Clear ();
 			udp.Send (new []{(byte)InteractionMessage.PingRequest }, 1, multicastEndpoint);
 		}
 
@@ -112,6 +126,8 @@ namespace Uno.GameList
 							gh.PlayerCount = r.ReadInt32 ();
 							gh.MaxPlayers = r.ReadByte ();
 							gh.State = (GameState)r.ReadByte ();
+							if (EntryReceived != null)
+								EntryReceived (gh);
 						}
 						break;
 				}
