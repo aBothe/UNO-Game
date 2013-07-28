@@ -11,8 +11,12 @@ namespace Uno
 {
     public partial class Lobby : Form
     {
+		#region Properties
         List<Player> PlayerList = new List<Player>();
-        public Lobby()
+
+		#endregion
+
+        Lobby()
         {
             InitializeComponent();
         }
