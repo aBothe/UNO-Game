@@ -28,11 +28,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Text;
-using Uno.GameHost;
 using System.IO;
 using System.Collections.Generic;
+using Uno.Game;
 
-namespace Uno.GameList
+namespace Uno.Games
 {
 	public class ServerListBackend
 	{
@@ -69,9 +69,9 @@ namespace Uno.GameList
 
 		static byte[] BuildHostInfo()
 		{
-			if (Host.IsHosting)
+			if (GameHost.IsHosting)
 			{
-				var host = Host.Instance;
+				var host = GameHost.Instance;
 				using (var ms = new MemoryStream())
 				using (var w = new BinaryWriter(ms))
 				{

@@ -1,5 +1,5 @@
 //
-// InteractionProtocol.cs
+// Player.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,13 +24,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
 
-namespace Uno.GameList
+namespace Uno.Game
 {
-	public enum InteractionMessage : byte
+	public class Player
 	{
-		PingRequest = 1,
-		PingAnswer,
+		public readonly GameHost Host;
+		public readonly int Id;
+
+		bool ready = false;
+		public bool ReadyToPlay{
+			get{
+				return ready;
+			}
+			set{
+				if (Host.State != GameState.WaitingForPlayers)
+					throw new InvalidOperationException ("Can't modify player state when not in game lobby!");
+				ready = value;
+			}
+		}
+
+		public Player (GameHost host, int id)
+		{
+			Host = host;
+			Id = id;
+
+			host.GameStateChanged += OnGameStateChanged;
+		}
+
+		protected virtual void OnGameStateChanged(object sender, GameStateChangedArgs e)
+		{
+			if(e.NewState== GameState.GameFinished)
+				ready = false;
+		}
 	}
 }
 

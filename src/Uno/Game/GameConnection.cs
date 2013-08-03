@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Uno.GameHost
+namespace Uno.Game
 {
 	public class GameConnection
 	{

@@ -14,7 +14,7 @@ namespace Uno
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GameList.ServerListe());
+            Application.Run(new Games.ServerListe());
         }
     }
 }

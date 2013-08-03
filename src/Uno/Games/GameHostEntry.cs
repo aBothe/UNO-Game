@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using Uno.GameHost;
+using Uno.Game;
 
-namespace Uno.GameList
+namespace Uno.Games
 {
 	public class GameHostEntry
 	{
@@ -17,6 +17,11 @@ namespace Uno.GameList
 		{
 			var o = obj as GameHostEntry;
 			return o != null && o.Address.Equals(Address);
+		}
+
+		public override int GetHashCode ()
+		{
+			return Address.GetHashCode ();
 		}
 
 		public override string ToString()

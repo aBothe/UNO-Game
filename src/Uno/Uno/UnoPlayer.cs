@@ -1,5 +1,5 @@
 //
-// Player.cs
+// UnoPlayer.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,42 +24,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Uno.GameHost;
 using System.Collections.Generic;
+using Uno.Game;
 
-namespace Uno.Game
+namespace Uno
 {
-	public class Player
+	public class UnoPlayer : Player
 	{
-		List<Card> CardDeck = new List<Card>();
-		public readonly Host Host;
-		public readonly int Id;
+		public new UnoHost Host {get {return base.Host as UnoHost; }}
 
-		bool ready = false;
-		public bool ReadyToPlay{
-			get{
-				return ready;
-			}
-			set{
-				if (Host.State != GameState.WaitingForPlayers)
-					throw new InvalidOperationException ("Can't modify player state when not in game lobby!");
-				ready = value;
-			}
-		}
+		readonly List<Card> CardDeck = new List<Card>();
 
-		public Player (Host host, int id)
+		public UnoPlayer (UnoHost host, int id)
+			: base(host, id)
 		{
-			Host = host;
-			Id = id;
-
-			host.GameStateChanged += (sender, e) => {
-				if(e.NewState== GameState.GameFinished)
-					ready = false;
-
-
-			};
 		}
 
+		public void ResetCardDeck()
+		{
+			CardDeck.Clear ();
+			this.CardDeck.AddRange(Host.Cards.GiveFirstHand ());
+		}
+
+		public bool RemoveCard(Card c)
+		{
+			return CardDeck.Remove (c);
+		}
+
+		public bool PutCard(Card c)
+		{
+			if (CardDeck.Contains (c))
+				return false;
+
+			CardDeck.Add (c);
+			return true;
+		}
 	}
 }
 

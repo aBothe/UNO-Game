@@ -24,18 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Uno.GameList;
 using System.Collections.Generic;
-using Uno.Game;
 
-namespace Uno.GameHost
+namespace Uno.Game
 {
 	public class GameStateChangedArgs : EventArgs {
-		public readonly Host Host;
+		public readonly GameHost Host;
 		public readonly GameState OldState;
 		public readonly GameState NewState;
 
-		public GameStateChangedArgs(Host h, GameState old, GameState n)
+		public GameStateChangedArgs(GameHost h, GameState old, GameState n)
 		{
 			Host = h;
 			OldState = old;
@@ -54,10 +52,11 @@ namespace Uno.GameHost
 	/// <summary>
 	/// Singleton. Each program instance may host one game only.
 	/// </summary>
-	public class Host : IDisposable
+	public class GameHost : IDisposable
 	{
 		#region Properties
-		public static Host Instance { get; private set; }
+		public readonly CardDeck Cards = new CardDeck ();
+		public static GameHost Instance { get; private set; }
 		public static bool IsHosting {get{ return Instance != null; }}
 		public const byte MinUnoPlayers = 2;
 		public const byte MaxUnoPlayers = 10;
@@ -96,17 +95,22 @@ namespace Uno.GameHost
 		#endregion
 
 		#region Init / Constructor
-		private Host() {
+		protected GameHost() {
 
 		}
 
-		public Host CreateHost()
+		public static GameHost CreateHost(GameHostFactory fac)
 		{
-			var host = new Host{
+			var host = fac.Create ();
 
-			};
 			// Initialisiert Spielhost, setzt den Host in den Lobbymodus, und wartet, 
 			// bis 2-10 Spieler verbunden & bereit sind + der Spielersteller das Spiel startet
+
+			/*
+			 * TCP-Listener binden, starten und auf Client-Connects warten.
+			 * Danach Daten/Statusupdates über alle Verbindungen schicken.
+			 * Clientseitige Updates erwarten (Aktionen, etwa Drücken des 'Bereit'-Buttons)
+			 */
 
 			return Instance = host;
 		}
@@ -115,6 +119,10 @@ namespace Uno.GameHost
 		{
 
 		}
+		#endregion
+
+		#region Player
+
 		#endregion
 
 		public void Shutdown()

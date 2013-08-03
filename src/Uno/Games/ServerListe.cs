@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Uno.Game;
 
-namespace Uno.GameList
+namespace Uno.Games
 {
 	public partial class ServerListe : Form
 	{
@@ -49,7 +49,7 @@ namespace Uno.GameList
 			ListBackend = new ServerListBackend ();
 			ListBackend.EntryReceived += (obj) => {
 				list_Servers.Items.Remove (obj);
-				if(obj.State != GameHost.GameState.ShuttingDown)
+				if(obj.State != GameState.ShuttingDown)
 					list_Servers.Items.Add (obj);
 				UpdateButtonStates();
 			};
@@ -92,13 +92,14 @@ namespace Uno.GameList
 
 		private void Click_CreateGame (object sender, EventArgs e)
 		{
-			if (GameHost.Host.IsHosting)
+			if (GameHost.IsHosting)
 			{
 				MessageBox.Show("Can't host two games!");
 				return;
 			}
 
-			var lobby = Lobby.CreateNewGame(NickName);
+			//TODO: Auswahl an verfügbaren Game-Hosts erschaffen
+			var lobby = Lobby.CreateNewGame(NickName, new UnoHostFactory());
 
 			if (lobby != null)
 			{

@@ -1,4 +1,4 @@
-﻿namespace Uno
+﻿namespace Uno.Game
 {
     partial class Lobby
     {

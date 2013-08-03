@@ -42,17 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\GameConnection.cs" />
-    <Compile Include="GameList\GameHostEntry.cs" />
-    <Compile Include="Game\Deck.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GameHost\Lobby.resx">
-      <DependentUpon>Lobby.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GameList\ServerListe.resx">
-      <DependentUpon>ServerListe.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -72,23 +63,29 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="GameList\ServerListe.cs">
+    <Compile Include="Uno\Card.cs" />
+    <Compile Include="Uno\CardDeck.cs" />
+    <Compile Include="Uno\UnoHost.cs" />
+    <Compile Include="Uno\UnoPlayer.cs" />
+    <Compile Include="Game\GameHost.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Lobby.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GameList\ServerListe.Designer.cs">
-      <DependentUpon>ServerListe.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GameList\ServerListBackend.cs" />
-    <Compile Include="GameList\InteractionProtocol.cs" />
-    <Compile Include="GameHost\Host.cs" />
-    <Compile Include="GameHost\Player.cs" />
-    <Compile Include="Game\Card.cs" />
-    <Compile Include="GameHost\Lobby.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GameHost\Lobby.Designer.cs">
+    <Compile Include="Game\Lobby.Designer.cs">
       <DependentUpon>Lobby.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game\GameConnection.cs" />
+    <Compile Include="Games\GameHostEntry.cs" />
+    <Compile Include="Games\ServerListe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Games\ServerListe.Designer.cs">
+      <DependentUpon>ServerListe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Games\ServerListBackend.cs" />
+    <Compile Include="Games\InteractionProtocol.cs" />
+    <Compile Include="Game\GameHostFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
