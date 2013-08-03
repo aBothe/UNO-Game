@@ -8,6 +8,7 @@ namespace Uno.Games
 {
 	public class GameHostEntry
 	{
+		public string GameTitle;
 		public int PlayerCount;
 		public int MaxPlayers;
 		public GameState State;
@@ -37,7 +38,7 @@ namespace Uno.Games
 					msg = "Closed";
 					break;
 			}
-			return string.Format("IP {0} ({1}/{2} Players, {3})", Address.Address, PlayerCount, MaxPlayers, msg);
+			return string.Format("{4},IP {0} ({1}/{2} Players, {3})", Address.Address, PlayerCount, MaxPlayers, msg, GameTitle);
 		}
 	}
 }

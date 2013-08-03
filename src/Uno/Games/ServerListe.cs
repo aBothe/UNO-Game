@@ -47,16 +47,28 @@ namespace Uno.Games
 			text_Nick.Focus();
 
 			ListBackend = new ServerListBackend ();
-			ListBackend.EntryReceived += (obj) => {
-				list_Servers.Items.Remove (obj);
-				if(obj.State != GameState.ShuttingDown)
-					list_Servers.Items.Add (obj);
-				UpdateButtonStates();
-			};
 		}
 
 		private void ServerListe_Load(object sender, EventArgs e)
 		{
+			ListBackend.EntryReceived += (obj) => {
+				var items = list_Servers.Items;
+				lock(items){
+					var i = items.IndexOf(obj);
+					if(i >= 0)
+						items.RemoveAt (i);
+
+					if(obj.State != GameState.ShuttingDown)
+					{
+						if(i == -1)
+							items.Add (obj);
+						else
+							items.Insert(i,obj);
+					}
+				}
+				UpdateButtonStates();
+			};
+
 			RefreshServerList();
 		}
 		#endregion
@@ -122,7 +134,8 @@ namespace Uno.Games
 
 		public void RefreshServerList()
 		{
-			list_Servers.Items.Clear();
+			lock(list_Servers.Items)
+				list_Servers.Items.Clear();
 			ListBackend.SendExistenceRequest();
 		}
 

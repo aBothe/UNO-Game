@@ -51,6 +51,7 @@ namespace Uno.Games
 
 		public ServerListBackend ()
 		{
+			GameHost.AnyGameStateChanged += ThisHostStateChanged;
 			udp = new UdpClient ();
 			udp.ExclusiveAddressUse = false;
 			udp.JoinMulticastGroup (multicastaddress);
@@ -62,6 +63,16 @@ namespace Uno.Games
 			listenerThread.Start ();
 		}
 
+		~ServerListBackend()
+		{
+			GameHost.AnyGameStateChanged -= ThisHostStateChanged;
+		}
+
+		void ThisHostStateChanged(object sender, GameStateChangedArgs ea)
+		{
+			SendHostUpdate (ea.Host);
+		}
+
 		public void SendExistenceRequest()
 		{
 			udp.Send (new []{(byte)InteractionMessage.PingRequest }, 1, multicastEndpoint);
@@ -69,25 +80,35 @@ namespace Uno.Games
 
 		static byte[] BuildHostInfo()
 		{
-			if (GameHost.IsHosting)
-			{
-				var host = GameHost.Instance;
-				using (var ms = new MemoryStream())
-				using (var w = new BinaryWriter(ms))
-				{
-					w.Write((byte)InteractionMessage.PingAnswer);
-					w.Write(host.PlayerCount);
-					w.Write(host.MaxPlayers);
-					w.Write((byte)host.State);
-					return ms.GetBuffer();
-				}
+			if (!GameHost.IsHosting)
+				return null;
+
+			return BuildHostInfo (GameHost.Instance);
+		}
+
+		static byte[] BuildHostInfo(GameHost host)
+		{
+			using (var ms = new MemoryStream())
+			using (var w = new BinaryWriter(ms)) {
+				w.Write ((byte)InteractionMessage.PingAnswer);
+				w.Write (host.PlayerCount);
+				w.Write (host.MaxPlayers);
+				w.Write ((byte)host.State);
+				// Note: GameTitle muss weniger als 128 enthalten
+				w.Write (host.GameTitle);
+				return ms.GetBuffer ();
 			}
-			return null;
 		}
 
 		public void SendHostUpdate()
 		{
-			var d = BuildHostInfo();
+			if(GameHost.IsHosting)
+				SendHostUpdate (GameHost.Instance);
+		}
+
+		public void SendHostUpdate(GameHost host)
+		{
+			var d = BuildHostInfo(host);
 			if (d != null)
 				udp.Send(d, d.Length, multicastEndpoint);
 		}
@@ -114,6 +135,7 @@ namespace Uno.Games
 							gh.PlayerCount = r.ReadInt32 ();
 							gh.MaxPlayers = r.ReadByte ();
 							gh.State = (GameState)r.ReadByte ();
+							gh.GameTitle = r.ReadString ();
 							if (EntryReceived != null)
 								EntryReceived (gh);
 						}

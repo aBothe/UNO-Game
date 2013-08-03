@@ -41,14 +41,6 @@ namespace Uno.Game
 		}
 	}
 
-	public enum GameState : byte
-	{
-		WaitingForPlayers,
-		Playing,
-		GameFinished,
-		ShuttingDown,
-	}
-
 	/// <summary>
 	/// Singleton. Each program instance may host one game only.
 	/// </summary>
@@ -71,15 +63,20 @@ namespace Uno.Game
 			}
 		}
 
-		GameState state = GameState.WaitingForPlayers;
+		GameState state;
 		public GameState State { get{return state;}
 			private set{
-				if(GameStateChanged!=null)
-					GameStateChanged(this, new GameStateChangedArgs(this, state, value));
+				var args = new GameStateChangedArgs (this, state, value);
 				state = value;
+
+				if(GameStateChanged!=null)
+					GameStateChanged(this, args);
+				if (AnyGameStateChanged != null)
+					AnyGameStateChanged (this, args);
 			}
 		}
 
+		public static EventHandler<GameStateChangedArgs> AnyGameStateChanged;
 		public event EventHandler<GameStateChangedArgs> GameStateChanged;
 
 		public virtual bool ReadyToPlay{
@@ -117,12 +114,17 @@ namespace Uno.Game
 			 * Clientseitige Updates erwarten (Aktionen, etwa Drücken des 'Bereit'-Buttons)
 			 */
 
-			return Instance = host;
+			Instance = host;
+
+			host.State = GameState.Starting;
+			host.State = GameState.WaitingForPlayers;
+
+			return host;
 		}
 
 		public virtual void Dispose ()
 		{
-
+			State = GameState.ShuttingDown;
 		}
 		#endregion
 
@@ -136,14 +138,13 @@ namespace Uno.Game
 				return false;
 
 			Instance.Shutdown ();
+			Instance = null;
 			return true;
 		}
 
 		public virtual void Shutdown()
 		{
-			State = GameState.ShuttingDown;
 			Dispose ();
-			Instance = null;
 		}
 	}
 }

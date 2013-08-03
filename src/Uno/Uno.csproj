@@ -86,6 +86,7 @@
     <Compile Include="Games\ServerListBackend.cs" />
     <Compile Include="Games\InteractionProtocol.cs" />
     <Compile Include="Game\GameHostFactory.cs" />
+    <Compile Include="Games\GameState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
