@@ -87,6 +87,10 @@
     <Compile Include="Games\InteractionProtocol.cs" />
     <Compile Include="Game\GameHostFactory.cs" />
     <Compile Include="Games\GameState.cs" />
+    <Compile Include="Game\HostBackend.cs" />
+    <Compile Include="Uno\UnoGameConnection.cs" />
+    <Compile Include="Game\HostMessage.cs" />
+    <Compile Include="Game\ClientMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

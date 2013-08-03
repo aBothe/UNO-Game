@@ -37,6 +37,7 @@ namespace Uno.Games
 	public class ServerListBackend
 	{
 		#region Properties
+		public const int MetaCommunicationPort = 55000;
 		internal static readonly IPAddress multicastaddress = IPAddress.Parse("239.0.0.222"); 
 		internal static readonly IPEndPoint multicastEndpoint;
 		UdpClient udp;
@@ -46,7 +47,7 @@ namespace Uno.Games
 
 		static ServerListBackend()
 		{
-			multicastEndpoint = new IPEndPoint(multicastaddress, 55000);
+			multicastEndpoint = new IPEndPoint(multicastaddress, MetaCommunicationPort);
 		}
 
 		public ServerListBackend ()
@@ -56,7 +57,7 @@ namespace Uno.Games
 			udp.ExclusiveAddressUse = false;
 			udp.JoinMulticastGroup (multicastaddress);
 
-			udp.Client.Bind (new IPEndPoint(IPAddress.Any,55000));
+			udp.Client.Bind (new IPEndPoint(IPAddress.Any,MetaCommunicationPort));
 
 			var listenerThread =new Thread(listenerTh);
 			listenerThread.IsBackground = true;
@@ -78,28 +79,6 @@ namespace Uno.Games
 			udp.Send (new []{(byte)InteractionMessage.PingRequest }, 1, multicastEndpoint);
 		}
 
-		static byte[] BuildHostInfo()
-		{
-			if (!GameHost.IsHosting)
-				return null;
-
-			return BuildHostInfo (GameHost.Instance);
-		}
-
-		static byte[] BuildHostInfo(GameHost host)
-		{
-			using (var ms = new MemoryStream())
-			using (var w = new BinaryWriter(ms)) {
-				w.Write ((byte)InteractionMessage.PingAnswer);
-				w.Write (host.PlayerCount);
-				w.Write (host.MaxPlayers);
-				w.Write ((byte)host.State);
-				// Note: GameTitle muss weniger als 128 enthalten
-				w.Write (host.GameTitle);
-				return ms.GetBuffer ();
-			}
-		}
-
 		public void SendHostUpdate()
 		{
 			if(GameHost.IsHosting)
@@ -108,7 +87,7 @@ namespace Uno.Games
 
 		public void SendHostUpdate(GameHost host)
 		{
-			var d = BuildHostInfo(host);
+			var d = GameHostEntry.SerializeHost(host);
 			if (d != null)
 				udp.Send(d, d.Length, multicastEndpoint);
 		}
@@ -122,22 +101,12 @@ namespace Uno.Games
 
 				switch ((InteractionMessage)data [0]) {
 					case InteractionMessage.PingRequest:
-						var d = BuildHostInfo();
-						if (d != null)
-							udp.Send(d, d.Length, multicastEndpoint);
+						SendHostUpdate ();
 						break;
 					case InteractionMessage.PingAnswer:
-						using (var ms = new MemoryStream (data))
-						using (var r = new BinaryReader (ms)) {
-							var gh = new GameHostEntry ();
-							gh.Address = targetAddress;
-							r.ReadByte ();
-							gh.PlayerCount = r.ReadInt32 ();
-							gh.MaxPlayers = r.ReadByte ();
-							gh.State = (GameState)r.ReadByte ();
-							gh.GameTitle = r.ReadString ();
-							if (EntryReceived != null)
-								EntryReceived (gh);
+						if (EntryReceived != null) {
+							var gh = GameHostEntry.FromBytes (targetAddress, data, 1);
+							EntryReceived (gh);
 						}
 						break;
 				}

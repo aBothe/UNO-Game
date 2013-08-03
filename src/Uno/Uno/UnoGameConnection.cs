@@ -1,5 +1,5 @@
 //
-// GameHostFactory.cs
+// UnoGameConnection.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,13 +24,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using Uno.Game;
 
-namespace Uno.Game
+namespace Uno
 {
-	public interface GameHostFactory
+	public class UnoGameConnection : GameConnection
 	{
-		GameHost Create();
-		GameConnection CreateConnection();
+		public UnoGameConnection ()
+		{
+		}
 	}
 }
 

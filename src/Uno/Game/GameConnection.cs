@@ -6,25 +6,22 @@ using System.Text;
 
 namespace Uno.Game
 {
-	public class GameConnection
+	public abstract class GameConnection
 	{
 		#region Properties
-		TcpClient tcp;
+		UdpClient udp;
 
 		#endregion
 
 		#region Init / Constructor
-		public GameConnection TryEstablishConnection(IPEndPoint ip)
+		public static GameConnection TryEstablishConnection(IPEndPoint ip, GameHostFactory fact)
 		{
-			var tcp = new TcpClient();
-			tcp.Connect(ip);
+			var udp = new UdpClient();
 
-			tcp.GetStream();
-
-			return new GameConnection();
+			return fact.CreateConnection();
 		}
 
-		private GameConnection()
+		public GameConnection()
 		{
 
 		}

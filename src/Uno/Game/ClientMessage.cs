@@ -1,5 +1,5 @@
 //
-// GameHostFactory.cs
+// ClientMessage.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -27,10 +27,16 @@ using System;
 
 namespace Uno.Game
 {
-	public interface GameHostFactory
+	/// <summary>
+	/// Messages the client will receive
+	/// </summary>
+	public enum ClientMessage
 	{
-		GameHost Create();
-		GameConnection CreateConnection();
+		JoinGranted=1,
+		JoinDenied,
+		Kicked,
+		Disconnected,
+		GameData
 	}
 }
 

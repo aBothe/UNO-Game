@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Uno.Game
 {
@@ -44,13 +45,14 @@ namespace Uno.Game
 	/// <summary>
 	/// Singleton. Each program instance may host one game only.
 	/// </summary>
-	public abstract class GameHost : IDisposable
+	public abstract class GameHost : HostBackend
 	{
 		#region Properties
 		public static GameHost Instance { get; private set; }
 		public static bool IsHosting {get{ return Instance != null; }}
 
 		public abstract string GameTitle{ get; }
+		public readonly long Id = DateTime.UtcNow.ToBinary();
 
 		public virtual byte MinPlayers {get{return 2;} set {}}
 		public virtual byte MaxPlayers {get { return byte.MaxValue; } set {} }
@@ -58,7 +60,7 @@ namespace Uno.Game
 		List<Player> Players =new List<Player>();
 		public int PlayerCount
 		{
-			get{ 
+			get{
 				return Players.Count;
 			}
 		}
@@ -81,7 +83,7 @@ namespace Uno.Game
 
 		public virtual bool ReadyToPlay{
 			get{
-				if (PlayerCount < MinPlayers)
+				if (PlayerCount < MinPlayers || PlayerCount > MaxPlayers)
 					return false;
 
 				foreach (var p in Players)
@@ -94,7 +96,7 @@ namespace Uno.Game
 		#endregion
 
 		#region Init / Constructor
-		protected GameHost() {
+		public GameHost() {
 
 		}
 
@@ -121,16 +123,13 @@ namespace Uno.Game
 
 			return host;
 		}
+		#endregion
 
-		public virtual void Dispose ()
+		#region Exit / Destructor
+		public override void Dispose ()
 		{
 			State = GameState.ShuttingDown;
 		}
-		#endregion
-
-		#region Player
-
-		#endregion
 
 		public static bool ShutDown()
 		{
@@ -146,6 +145,31 @@ namespace Uno.Game
 		{
 			Dispose ();
 		}
+		#endregion
+
+		#region Messaging
+		protected override void DataReceived (byte[] data)
+		{
+			var ms = new MemoryStream (data);
+			var r = new BinaryReader (ms);
+
+			var message = r.ReadByte ();
+
+			// Ensure that the correct host was reached.
+			if (r.ReadInt64 () != Id)
+				return;
+
+			switch (message) {
+
+			}
+		}
+		#endregion
+
+		#region Player
+
+		#endregion
+
+
 	}
 }
 

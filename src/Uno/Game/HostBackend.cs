@@ -1,5 +1,5 @@
 //
-// UnoHost.cs
+// GameHostBackend.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,68 +24,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Uno.Game;
+using System.Net.Sockets;
+using System.Net;
+using System.IO;
+using System.Threading;
 
 namespace Uno
 {
-	public class UnoHost : GameHost
+	public abstract class HostBackend : IDisposable
 	{
-		#region Properties
-		public readonly CardDeck AvailableCards = new CardDeck ();
+		public const int ClientToServerCommunicationPort = 55001;
+		UdpClient udp;
 
-		public override string GameTitle {
-			get {
-				return "Uno";
+		public IPEndPoint Address
+		{
+			get{
+				return udp.Client.RemoteEndPoint as IPEndPoint;
 			}
 		}
 
-		public const byte MinUnoPlayers = 2;
-		public const byte MaxUnoPlayers = 10;
-
-		byte maxPlayers = MaxUnoPlayers;
-		public override byte MaxPlayers
+		public HostBackend ()
 		{
-			get{return maxPlayers;}
-			set{
-				if (State == GameState.Playing)
-					return;
-				if (value < MinPlayers)
-					throw new InvalidOperationException ("MayPlayer value cannot be smaller than MinPlayer count");
-				maxPlayers = Math.Max (MaxUnoPlayers, value);
+			udp = new UdpClient ();
+			udp.ExclusiveAddressUse = false;
+
+			udp.Client.Bind (new IPEndPoint(IPAddress.Any,ClientToServerCommunicationPort));
+
+			var listenerThread = new Thread(listenerTh);
+			listenerThread.IsBackground = true;
+			listenerThread.Start ();
+		}
+
+		public virtual void Dispose()
+		{
+			udp.Close ();
+		}
+
+		protected abstract void DataReceived(byte[] data);
+
+		protected void Send(byte[] data, IPEndPoint ep)
+		{
+			udp.Send (data, data.Length, ep);
+		}
+
+		void listenerTh()
+		{
+			while(udp.Client.IsBound)
+			{
+				IPEndPoint targetAddress = null;
+				var data = udp.Receive(ref targetAddress);
+				DataReceived (data);
 			}
-		}
-
-		byte minPlayers = MinUnoPlayers;
-		public override byte MinPlayers {
-			get {
-				return minPlayers;
-			}
-			set {
-				if (value > MaxPlayers)
-					throw new InvalidOperationException ("MinPlayer value cannot be larger than MaxPlayer count");
-				minPlayers = Math.Max (value, MinUnoPlayers);
-			}
-		}
-
-		#endregion
-
-		public UnoHost ()
-		{
-		}
-	}
-
-	public class UnoHostFactory : Uno.Game.GameHostFactory
-	{
-		public readonly static UnoHostFactory Instance = new UnoHostFactory();
-
-		public GameHost Create ()
-		{
-			return new UnoHost ();
-		}
-
-		public GameConnection CreateConnection()
-		{
-			return new UnoGameConnection ();
 		}
 	}
 }

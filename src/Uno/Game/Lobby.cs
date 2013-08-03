@@ -12,7 +12,7 @@ namespace Uno.Game
     public partial class Lobby : Form
     {
 		#region Properties
-		List<Player> PlayerList = new List<Player>();
+		public readonly GameConnection gameCon;
 		static bool IsAdmin { get { return GameHost.IsHosting; } }
 
 		#endregion
@@ -23,30 +23,38 @@ namespace Uno.Game
 			if (GameHost.IsHosting)
 				throw new InvalidOperationException ("Can't create an other game while hosting one!");
 
-			GameHost.HostGame (ghf);
+			var host = GameHost.HostGame (ghf);
 
-			var lobby = new Lobby();
+			if (!GameHost.IsHosting)
+				return null;
 
-			lobby.Show();
+			var lobby = TryJoinGame (host.Address, nickName, ghf);
+
+			if (lobby == null)
+				host.Shutdown ();
+
 			return lobby;
 		}
 
-		public static Lobby TryJoinGame(IPEndPoint ip, string nickName)
+		public static Lobby TryJoinGame(IPEndPoint ip, string nickName, GameHostFactory ghf)
 		{
-			if (GameHost.IsHosting)
-				throw new InvalidOperationException ("Can't join an other game while hosting one!");
-
 			// Connect to server, ask if players are available (indirectly - you'll become kicked/rejected otherwise)
 			// If connect happened successfully and connection is established, show lobby
 			// -- Always expect to be kicked/disconnected for no obvious reasons!
-			var lobby = new Lobby();
+			var connection = GameConnection.TryEstablishConnection (ip, ghf);
+
+			if (connection == null)
+				return null;
+
+			var lobby = new Lobby(connection);
 
 			lobby.Show();
 			return lobby;
 		}
 
-        Lobby()
+		Lobby(GameConnection gameCon)
         {
+			this.gameCon = gameCon;
             InitializeComponent();
         }
 
