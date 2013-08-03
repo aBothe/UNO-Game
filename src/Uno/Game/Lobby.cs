@@ -21,12 +21,9 @@ namespace Uno.Game
 		public static Lobby CreateNewGame(string nickName, GameHostFactory ghf)
 		{
 			if (GameHost.IsHosting)
-				return null;
+				throw new InvalidOperationException ("Can't create an other game while hosting one!");
 
-			var host = GameHost.CreateHost (ghf);
-
-			if (host == null)
-				return null;
+			GameHost.HostGame (ghf);
 
 			var lobby = new Lobby();
 
@@ -37,7 +34,7 @@ namespace Uno.Game
 		public static Lobby TryJoinGame(IPEndPoint ip, string nickName)
 		{
 			if (GameHost.IsHosting)
-				return null;
+				throw new InvalidOperationException ("Can't join an other game while hosting one!");
 
 			// Connect to server, ask if players are available (indirectly - you'll become kicked/rejected otherwise)
 			// If connect happened successfully and connection is established, show lobby
@@ -61,6 +58,7 @@ namespace Uno.Game
 
 		private void button_ReturnToLobby_Click(object sender, EventArgs e)
 		{
+			GameHost.ShutDown ();
 			Close();
 		}
     }

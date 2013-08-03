@@ -52,25 +52,16 @@ namespace Uno.Game
 	/// <summary>
 	/// Singleton. Each program instance may host one game only.
 	/// </summary>
-	public class GameHost : IDisposable
+	public abstract class GameHost : IDisposable
 	{
 		#region Properties
-		public readonly CardDeck Cards = new CardDeck ();
 		public static GameHost Instance { get; private set; }
 		public static bool IsHosting {get{ return Instance != null; }}
-		public const byte MinUnoPlayers = 2;
-		public const byte MaxUnoPlayers = 10;
 
-		byte maxPlayers = MaxUnoPlayers;
-		public byte MaxPlayers
-		{
-			get{return maxPlayers;}
-			set{
-				if (State == GameState.Playing)
-					return;
-				maxPlayers = Math.Max (MaxUnoPlayers, value);
-			}
-		}
+		public abstract string GameTitle{ get; }
+
+		public virtual byte MinPlayers {get{return 2;} set {}}
+		public virtual byte MaxPlayers {get { return byte.MaxValue; } set {} }
 
 		List<Player> Players =new List<Player>();
 		public int PlayerCount
@@ -79,7 +70,6 @@ namespace Uno.Game
 				return Players.Count;
 			}
 		}
-
 
 		GameState state = GameState.WaitingForPlayers;
 		public GameState State { get{return state;}
@@ -92,6 +82,18 @@ namespace Uno.Game
 
 		public event EventHandler<GameStateChangedArgs> GameStateChanged;
 
+		public virtual bool ReadyToPlay{
+			get{
+				if (PlayerCount < MinPlayers)
+					return false;
+
+				foreach (var p in Players)
+					if (!p.ReadyToPlay)
+						return false;
+
+				return true;
+			}
+		}
 		#endregion
 
 		#region Init / Constructor
@@ -99,8 +101,11 @@ namespace Uno.Game
 
 		}
 
-		public static GameHost CreateHost(GameHostFactory fac)
+		public static GameHost HostGame(GameHostFactory fac)
 		{
+			if (IsHosting)
+				throw new InvalidOperationException ("Shut down other host first!");
+
 			var host = fac.Create ();
 
 			// Initialisiert Spielhost, setzt den Host in den Lobbymodus, und wartet, 
@@ -115,7 +120,7 @@ namespace Uno.Game
 			return Instance = host;
 		}
 
-		public void Dispose ()
+		public virtual void Dispose ()
 		{
 
 		}
@@ -125,9 +130,20 @@ namespace Uno.Game
 
 		#endregion
 
-		public void Shutdown()
+		public static bool ShutDown()
 		{
+			if (Instance == null)
+				return false;
 
+			Instance.Shutdown ();
+			return true;
+		}
+
+		public virtual void Shutdown()
+		{
+			State = GameState.ShuttingDown;
+			Dispose ();
+			Instance = null;
 		}
 	}
 }

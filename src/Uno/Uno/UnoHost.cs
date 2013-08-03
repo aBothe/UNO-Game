@@ -31,8 +31,41 @@ namespace Uno
 	public class UnoHost : GameHost
 	{
 		#region Properties
-		public readonly CardDeck Cards = new CardDeck ();
+		public readonly CardDeck AvailableCards = new CardDeck ();
 
+		public override string GameTitle {
+			get {
+				return "Uno";
+			}
+		}
+
+		public const byte MinUnoPlayers = 2;
+		public const byte MaxUnoPlayers = 10;
+
+		byte maxPlayers = MaxUnoPlayers;
+		public override byte MaxPlayers
+		{
+			get{return maxPlayers;}
+			set{
+				if (State == GameState.Playing)
+					return;
+				if (value < MinPlayers)
+					throw new InvalidOperationException ("MayPlayer value cannot be smaller than MinPlayer count");
+				maxPlayers = Math.Max (MaxUnoPlayers, value);
+			}
+		}
+
+		byte minPlayers = MinUnoPlayers;
+		public override byte MinPlayers {
+			get {
+				return minPlayers;
+			}
+			set {
+				if (value > MaxPlayers)
+					throw new InvalidOperationException ("MinPlayer value cannot be larger than MaxPlayer count");
+				minPlayers = Math.Max (value, MinUnoPlayers);
+			}
+		}
 
 		#endregion
 

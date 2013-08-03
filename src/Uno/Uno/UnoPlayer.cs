@@ -43,7 +43,7 @@ namespace Uno
 		public void ResetCardDeck()
 		{
 			CardDeck.Clear ();
-			this.CardDeck.AddRange(Host.Cards.GiveFirstHand ());
+			this.CardDeck.AddRange(Host.AvailableCards.GiveFirstHand ());
 		}
 
 		public bool RemoveCard(Card c)
