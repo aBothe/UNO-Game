@@ -1,5 +1,5 @@
 //
-// UnoPlayer.cs
+// IdGenerator.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,40 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
-using Uno.Game;
 
 namespace Uno
 {
-	public class UnoPlayer : Player
+	public class IdGenerator
 	{
-		public new UnoHost Host {get {return base.Host as UnoHost; }}
+		static Random rand = new Random();
 
-		readonly List<Card> CardDeck = new List<Card>();
-
-		public UnoPlayer (UnoHost host, string nick, long id)
-			: base(host, nick, id)
+		public static long GenerateId()
 		{
-		}
-
-		public void ResetCardDeck()
-		{
-			CardDeck.Clear ();
-			this.CardDeck.AddRange(Host.AvailableCards.GiveFirstHand ());
-		}
-
-		public bool RemoveCard(Card c)
-		{
-			return CardDeck.Remove (c);
-		}
-
-		public bool PutCard(Card c)
-		{
-			if (CardDeck.Contains (c))
-				return false;
-
-			CardDeck.Add (c);
-			return true;
+			return DateTime.UtcNow.ToBinary () + rand.Next(int.MaxValue) << rand.Next(8);
 		}
 	}
 }

@@ -30,13 +30,17 @@ namespace Uno.Game
 	/// <summary>
 	/// Messages the client will receive
 	/// </summary>
-	public enum ClientMessage
+	public enum ClientMessage : byte
 	{
 		JoinGranted=1,
 		JoinDenied,
 		Kicked,
 		Disconnected,
-		GameData
+		Timeout,
+		KeepAlive,
+
+		GameData,
+		PlayerInfo
 	}
 }
 

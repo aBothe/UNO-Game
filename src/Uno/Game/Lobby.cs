@@ -28,7 +28,7 @@ namespace Uno.Game
 			if (!GameHost.IsHosting)
 				return null;
 
-			var lobby = TryJoinGame (host.Address, nickName, ghf);
+			var lobby = TryJoinGame (host.Address, host.Id, nickName, ghf);
 
 			if (lobby == null)
 				host.Shutdown ();
@@ -36,12 +36,12 @@ namespace Uno.Game
 			return lobby;
 		}
 
-		public static Lobby TryJoinGame(IPEndPoint ip, string nickName, GameHostFactory ghf)
+		public static Lobby TryJoinGame(IPEndPoint ip, long hostId, string nickName, GameHostFactory ghf)
 		{
 			// Connect to server, ask if players are available (indirectly - you'll become kicked/rejected otherwise)
 			// If connect happened successfully and connection is established, show lobby
 			// -- Always expect to be kicked/disconnected for no obvious reasons!
-			var connection = GameConnection.TryEstablishConnection (ip, ghf);
+			var connection = GameConnection.TryEstablishConnection (ip, hostId, nickName, ghf);
 
 			if (connection == null)
 				return null;

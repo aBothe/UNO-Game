@@ -66,8 +66,13 @@ namespace Uno
 				minPlayers = Math.Max (value, MinUnoPlayers);
 			}
 		}
-
 		#endregion
+            
+
+		protected override Player CreatePlayer (string nick)
+		{
+			throw new NotImplementedException ();
+		}
 
 		public UnoHost ()
 		{

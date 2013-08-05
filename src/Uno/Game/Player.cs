@@ -25,13 +25,16 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Uno.Game
 {
 	public class Player
 	{
 		public readonly GameHost Host;
-		public readonly int Id;
+		public readonly long Id = IdGenerator.GenerateId();
+		public readonly string Nick;
+		public IPEndPoint Address;
 
 		bool ready = false;
 		public bool ReadyToPlay{
@@ -45,8 +48,9 @@ namespace Uno.Game
 			}
 		}
 
-		public Player (GameHost host, int id)
+		public Player (GameHost host, string nick, long id)
 		{
+			Nick = nick;
 			Host = host;
 			Id = id;
 
