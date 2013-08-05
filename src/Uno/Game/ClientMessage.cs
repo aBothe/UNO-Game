@@ -40,7 +40,8 @@ namespace Uno.Game
 		KeepAlive,
 
 		GameData,
-		PlayerInfo
+		PlayerInfo,
+		GeneralPlayersInfo,
 	}
 }
 

@@ -330,6 +330,7 @@ namespace Uno.Game
 			using (var ms = new MemoryStream ())
 				using (var w = new BinaryWriter(ms)) {
 				w.Write (p.Id);
+				w.Write ((byte)ClientMessage.GameData);
 				w.Write (data);
 				Send (ms, p.Address);
 			}
@@ -342,6 +343,7 @@ namespace Uno.Game
 				lock (players)
 					foreach (var p in players) {
 						w.Write (p.Id);
+						w.Write ((byte)ClientMessage.GameData);
 						w.Write (data);
 						Send (ms, p.Address);
 						ms.SetLength (0);
