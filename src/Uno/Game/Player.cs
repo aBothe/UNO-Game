@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Uno.Game
 {
@@ -33,6 +34,7 @@ namespace Uno.Game
 		public readonly GameHost Host;
 		public readonly long Id = IdGenerator.GenerateId();
 		public readonly string Nick;
+		public IPEndPoint Address;
 
 		bool ready = false;
 		public bool ReadyToPlay{

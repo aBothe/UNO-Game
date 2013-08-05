@@ -38,7 +38,14 @@ namespace Uno.Game
 
 		GameData,
 		SetReadyState,
+		/// <summary>
+		/// Information about the own player
+		/// </summary>
 		GetPlayerInfo,
+		/// <summary>
+		/// General player information that are available to all players
+		/// </summary>
+		GetPlayersInfo,
 	}
 }
 
