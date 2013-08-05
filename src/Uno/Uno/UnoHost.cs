@@ -74,7 +74,7 @@ namespace Uno
 		}
 	}
 
-	public class UnoHostFactory : Uno.Game.GameHostFactory
+	public class UnoHostFactory : Game.GameHostFactory
 	{
 		public readonly static UnoHostFactory Instance = new UnoHostFactory();
 

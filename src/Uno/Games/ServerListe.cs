@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Uno.Game;
+using Uno.Uno;
 
 namespace Uno.Games
 {
@@ -122,7 +123,11 @@ namespace Uno.Games
 
 		private void Click_Refresh(object sender, EventArgs e)
 		{
-			RefreshServerList();
+			//RefreshServerList();
+            GameField feld = new GameField();
+            feld.Show();
+            
+
 		}
 		#endregion
 

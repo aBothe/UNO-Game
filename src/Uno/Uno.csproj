@@ -54,6 +54,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Uno\GameField.resx">
+      <DependentUpon>GameField.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -65,6 +68,12 @@
     </Compile>
     <Compile Include="Uno\Card.cs" />
     <Compile Include="Uno\CardDeck.cs" />
+    <Compile Include="Uno\GameField.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Uno\GameField.Designer.cs">
+      <DependentUpon>GameField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Uno\UnoHost.cs" />
     <Compile Include="Uno\UnoPlayer.cs" />
     <Compile Include="Game\GameHost.cs" />
