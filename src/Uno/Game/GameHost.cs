@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 
 namespace Uno.Game
 {
@@ -52,17 +53,30 @@ namespace Uno.Game
 		public static bool IsHosting {get{ return Instance != null; }}
 
 		public abstract string GameTitle{ get; }
-		public readonly long Id = DateTime.UtcNow.ToBinary();
+		public readonly long Id = IdGenerator.GenerateId();
 
 		public virtual byte MinPlayers {get{return 2;} set {}}
 		public virtual byte MaxPlayers {get { return byte.MaxValue; } set {} }
 
-		List<Player> Players =new List<Player>();
+		List<Player> players =new List<Player>();
 		public int PlayerCount
 		{
 			get{
-				return Players.Count;
+				return players.Count;
 			}
+		}
+
+		public IEnumerable<Player> Players
+		{
+			get{return players;}
+		}
+
+		public Player GetPlayer(long id)
+		{
+			foreach (var p in players)
+				if (p.Id == id)
+					return p;
+			return null;
 		}
 
 		GameState state;
@@ -86,7 +100,7 @@ namespace Uno.Game
 				if (PlayerCount < MinPlayers || PlayerCount > MaxPlayers)
 					return false;
 
-				foreach (var p in Players)
+				foreach (var p in players)
 					if (!p.ReadyToPlay)
 						return false;
 
@@ -147,26 +161,85 @@ namespace Uno.Game
 		}
 		#endregion
 
+
+
+
 		#region Messaging
-		protected override void DataReceived (byte[] data)
+		protected override void DataReceived (IPEndPoint ep,byte[] data)
 		{
 			var ms = new MemoryStream (data);
 			var r = new BinaryReader (ms);
-
-			var message = r.ReadByte ();
 
 			// Ensure that the correct host was reached.
 			if (r.ReadInt64 () != Id)
 				return;
 
-			switch (message) {
+			var message = (HostMessage)r.ReadByte ();
 
+			MemoryStream answer;
+			BinaryWriter w;
+
+			switch (message) {
+				case HostMessage.Connect:
+
+					var connectId = r.ReadInt64 ();
+					var requestedNick = r.ReadString ();
+					answer = new MemoryStream ();
+					w = new BinaryWriter (answer);
+
+					w.Write (connectId);
+
+					if (State != GameState.WaitingForPlayers) {
+						w.Write ((byte)ClientMessage.JoinDenied);
+						w.Write ("Server is not awaiting new players!");
+					} else if (players.Count < MaxPlayers) {
+						// Create new player
+						var player = CreatePlayer (GetValidPlayerNick (requestedNick));
+
+						w.Write ((byte)ClientMessage.JoinGranted);
+						w.Write (player.Id);
+						w.Write (player.Nick);
+
+						players.Add (player);
+						OnPlayerAdded (player);
+					} else {
+						w.Write ((byte)ClientMessage.JoinDenied);
+						w.Write ("Player limit reached!");
+					}
+
+					Send (answer, ep);
+					w.Close ();
+					answer.Dispose ();
+					break;
 			}
 		}
 		#endregion
 
 		#region Player
+		protected abstract Player CreatePlayer(string nick);
 
+		protected virtual void OnPlayerAdded(Player player)	{}
+
+		string GetValidPlayerNick(string originalNick)
+		{
+			lock (players) {
+				bool rep;
+				string currentNick = originalNick;
+				int i = 2;
+				do {
+					rep = false;
+
+					foreach (var p in players)
+						if (p.Nick == currentNick) {
+							currentNick = originalNick + (i++).ToString();
+							rep = true;
+							break;
+						}
+				} while(rep);
+
+				return currentNick;
+			}
+		}
 		#endregion
 
 

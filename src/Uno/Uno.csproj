@@ -91,6 +91,8 @@
     <Compile Include="Uno\UnoGameConnection.cs" />
     <Compile Include="Game\HostMessage.cs" />
     <Compile Include="Game\ClientMessage.cs" />
+    <Compile Include="Misc\IdGenerator.cs" />
+    <Compile Include="Misc\StreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -104,4 +106,7 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Misc\" />
+  </ItemGroup>
 </Project>

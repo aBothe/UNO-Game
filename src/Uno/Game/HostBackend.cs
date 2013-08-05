@@ -60,7 +60,12 @@ namespace Uno
 			udp.Close ();
 		}
 
-		protected abstract void DataReceived(byte[] data);
+		protected abstract void DataReceived(IPEndPoint ep,byte[] data);
+
+		protected void Send(MemoryStream ms, IPEndPoint ep)
+		{
+			Send (ms.ToArray (), ep);
+		}
 
 		protected void Send(byte[] data, IPEndPoint ep)
 		{
@@ -73,7 +78,7 @@ namespace Uno
 			{
 				IPEndPoint targetAddress = null;
 				var data = udp.Receive(ref targetAddress);
-				DataReceived (data);
+				DataReceived (targetAddress,data);
 			}
 		}
 	}

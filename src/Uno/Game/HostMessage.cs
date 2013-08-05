@@ -30,11 +30,15 @@ namespace Uno.Game
 	/// <summary>
 	/// Messages a game host will receive.
 	/// </summary>
-	public enum HostMessage
+	public enum HostMessage : byte
 	{
 		Connect=1,
 		Disconnect,
-		GameData
+		KeepAlive,
+
+		GameData,
+		SetReadyState,
+		GetPlayerInfo,
 	}
 }
 

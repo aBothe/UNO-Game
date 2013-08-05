@@ -1,5 +1,5 @@
 //
-// Player.cs
+// StreamExtensions.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,41 +24,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
-namespace Uno.Game
+namespace Uno
 {
-	public class Player
+	public static class StreamExtensions
 	{
-		public readonly GameHost Host;
-		public readonly long Id = IdGenerator.GenerateId();
-		public readonly string Nick;
-
-		bool ready = false;
-		public bool ReadyToPlay{
-			get{
-				return ready;
-			}
-			set{
-				if (Host.State != GameState.WaitingForPlayers)
-					throw new InvalidOperationException ("Can't modify player state when not in game lobby!");
-				ready = value;
-			}
+		public static void WriteLongString(BinaryWriter w, string s)
+		{
+			w.Write ((ushort)s.Length);
+			var chars = Encoding.UTF8.GetBytes (s);
+			w.Write (chars);
 		}
 
-		public Player (GameHost host, string nick, long id)
+		public static string ReadLongString(BinaryReader r)
 		{
-			Nick = nick;
-			Host = host;
-			Id = id;
-
-			host.GameStateChanged += OnGameStateChanged;
-		}
-
-		protected virtual void OnGameStateChanged(object sender, GameStateChangedArgs e)
-		{
-			if(e.NewState== GameState.GameFinished)
-				ready = false;
+			var len = (int)r.ReadUInt16 ();
+			var chars = r.ReadBytes (len);
+			return Encoding.UTF8.GetString (chars);
 		}
 	}
 }

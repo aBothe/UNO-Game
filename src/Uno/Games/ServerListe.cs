@@ -86,7 +86,7 @@ namespace Uno.Games
 				return;
 			}
 
-			var lobby = Lobby.TryJoinGame(gho.Address, NickName, UnoHostFactory.Instance);
+			var lobby = Lobby.TryJoinGame(gho.Address, gho.HostId, NickName, UnoHostFactory.Instance);
 
 			if (lobby != null)
 			{

@@ -1,5 +1,5 @@
 //
-// Player.cs
+// IdGenerator.cs
 //
 // Author:
 //       Alexander Bothe <info@alexanderbothe.com>
@@ -24,41 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using System.Collections.Generic;
 
-namespace Uno.Game
+namespace Uno
 {
-	public class Player
+	public class IdGenerator
 	{
-		public readonly GameHost Host;
-		public readonly long Id = IdGenerator.GenerateId();
-		public readonly string Nick;
+		static Random rand = new Random();
 
-		bool ready = false;
-		public bool ReadyToPlay{
-			get{
-				return ready;
-			}
-			set{
-				if (Host.State != GameState.WaitingForPlayers)
-					throw new InvalidOperationException ("Can't modify player state when not in game lobby!");
-				ready = value;
-			}
-		}
-
-		public Player (GameHost host, string nick, long id)
+		public static long GenerateId()
 		{
-			Nick = nick;
-			Host = host;
-			Id = id;
-
-			host.GameStateChanged += OnGameStateChanged;
-		}
-
-		protected virtual void OnGameStateChanged(object sender, GameStateChangedArgs e)
-		{
-			if(e.NewState== GameState.GameFinished)
-				ready = false;
+			return DateTime.UtcNow.ToBinary () + rand.Next(int.MaxValue) << rand.Next(8);
 		}
 	}
 }
