@@ -80,6 +80,16 @@ namespace Uno.Game
 			return null;
 		}
 
+		public Player GetPlayer(string nick)
+		{
+			lock(players)
+				foreach (var p in players)
+					if (p.Nick == nick)
+						return p;
+			return null;
+		}
+
+
 		GameState state;
 		public GameState State { get{return state;}
 			private set{
@@ -205,7 +215,10 @@ namespace Uno.Game
 					break;
 
 				case HostMessage.Disconnect:
-					DisconnectPlayer (w,playerId, ClientMessage.Disconnected, "Disconnected by user", ep);
+					player = GetPlayer (playerId);
+
+					if(player!=null)
+						DisconnectPlayer (w, player, ClientMessage.Disconnected, "Disconnected by user", ep);
 					break;
 
 				case HostMessage.GetReadyState:
@@ -320,26 +333,29 @@ namespace Uno.Game
 		/// </summary>
 		protected virtual void OnComposeGeneralPlayerInfo(Player p, BinaryWriter w) {}
 
-		public bool DisconnectPlayer(BinaryWriter w,long id, ClientMessage reason = ClientMessage.Disconnected, string message = null, IPEndPoint ep = null)
+		public void DisconnectPlayer(Player player, ClientMessage reason = ClientMessage.Disconnected, string message = null)
 		{
-			var player = GetPlayer(id);
-
-			if(player != null)
-			{
-				OnPlayerDisconnecting (player, reason);
-				lock(players)
-					players.Remove (player);
-				w.Write (id);
-				w.Write ((byte)reason);
-				if (message == null)
-					w.Write ((byte)0);
-				else
-					w.Write (message);
-				player.Address = ep;
-				OnPlayerDisconnected (player, reason);
-				return true;
+			using (var ms = new MemoryStream())
+			using (var w = new BinaryWriter(ms)) {
+				DisconnectPlayer (w, player, reason, message);
+				Send (ms, player.Address);
 			}
-			return false;
+		}
+
+		public void DisconnectPlayer(BinaryWriter w,Player player, ClientMessage reason = ClientMessage.Disconnected, string message = null, IPEndPoint ep = null)
+		{
+			OnPlayerDisconnecting (player, reason);
+			lock(players)
+				players.Remove (player);
+			w.Write (player.Id);
+			w.Write ((byte)reason);
+			if (message == null)
+				w.Write ((byte)0);
+			else
+				w.Write (message);
+			if(ep != null)
+				player.Address = ep;
+			OnPlayerDisconnected (player, reason);
 		}
 
 		string GetValidPlayerNick(string originalNick)

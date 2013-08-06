@@ -52,7 +52,7 @@ namespace Uno.Game
 			con.GeneralPlayerInfoReceived += lobby.PlayerInfoReceived;
 			con.OtherPlayerLeft += lobby.OtherPlayerLeft;
 			con.ChatArrived += lobby.ChatMessageReceived;
-			con.ReadyStateChanged += lobby.ReadStateChanged;
+			con.ReadyStateChanged += lobby.ReadyStateChanged;
 
 			lobby.Connection = con;
 
@@ -73,7 +73,9 @@ namespace Uno.Game
 
         private void Lobby_Load(object sender, EventArgs e)
         {
-
+			if (!IsAdmin) {
+				panel_Admin.Visible = false;
+			}
         }
 		#endregion
 
@@ -160,13 +162,15 @@ namespace Uno.Game
 		{
 			var pi = new PlayerInfo { nick = nick, isReady = isReady };
 
-			var i = list_Players.Items.IndexOf (pi);
+			lock (list_Players.Items) {
+				var i = list_Players.Items.IndexOf (pi);
 
-			if (i < 0)
-				list_Players.Items.Add (pi);
-			else {
-				list_Players.Items.RemoveAt (i);
-				list_Players.Items.Insert (i, pi);
+				if (i < 0)
+					list_Players.Items.Add (pi);
+				else {
+					list_Players.Items.RemoveAt (i);
+					list_Players.Items.Insert (i, pi);
+				}
 			}
 		}
 
@@ -183,13 +187,30 @@ namespace Uno.Game
 		#endregion
 
 		#region Buttons
+		private void button_StartGame_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void button_KickPlayers_Click(object sender, EventArgs e)
+		{
+			foreach (PlayerInfo pi in list_Players.SelectedItems) {
+				var p = GameHost.Instance.GetPlayer (pi.nick);
+
+				if (p == null)
+					continue;
+
+				GameHost.Instance.DisconnectPlayer (p, ClientMessage.Kicked);
+			}
+		}
+
 		void text_ChatMessage_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if(e.KeyCode == Keys.Return)
 				button_SendChat_Click (sender, e);
 		}
 
-		void ReadStateChanged(bool ready)
+		void ReadyStateChanged(bool ready)
 		{
 			button_Ready.Checked = ready;
 		}

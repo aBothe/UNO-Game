@@ -170,6 +170,7 @@
 			this.button_KickPlayers.Size = new System.Drawing.Size(120, 23);
 			this.button_KickPlayers.TabIndex = 8;
 			this.button_KickPlayers.Text = "Kick selected players";
+			this.button_KickPlayers.Click += button_KickPlayers_Click;
 			// 
 			// Lobby
 			// 
