@@ -53,25 +53,21 @@ namespace Uno.Games
 		private void ServerListe_Load(object sender, EventArgs e)
 		{
 			ListBackend.EntryReceived += (obj) => {
-				BeginInvoke(new MethodInvoker(() =>
-				{
-					var items = list_Servers.Items;
-					lock (items)
-					{
-						var i = items.IndexOf(obj);
-						if (i >= 0)
-							items.RemoveAt(i);
+				var items = list_Servers.Items;
+				lock(items){
+					var i = items.IndexOf(obj);
+					if(i >= 0)
+						items.RemoveAt (i);
 
-						if (obj.State != GameState.ShuttingDown)
-						{
-							if (i == -1)
-								items.Add(obj);
-							else
-								items.Insert(i, obj);
-						}
+					if(obj.State != GameState.ShuttingDown)
+					{
+						if(i == -1)
+							items.Add (obj);
+						else
+							items.Insert(i,obj);
 					}
-					UpdateButtonStates();
-				}));
+				}
+				UpdateButtonStates();
 			};
 
 			RefreshServerList();
@@ -139,9 +135,8 @@ namespace Uno.Games
 
 		private void Click_Refresh(object sender, EventArgs e)
 		{
-			//RefreshServerList();
-            GameField feld = new GameField();
-            feld.Show();
+			RefreshServerList();
+           
             
 
 		}

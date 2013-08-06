@@ -77,6 +77,9 @@ namespace Uno
                 case CardColor.Black:
                     imageLocation += "BLACK/";
                     break;
+                case CardColor.None:
+                    imageLocation += "BLACK/";
+                    break;
             }
 
             switch (Caption)
@@ -132,6 +135,10 @@ namespace Uno
                 case CardCaption.SkipNextPlayer:
                     imageLocation += "SKIP.png";
                     break;
+
+                case CardCaption.None:
+                    imageLocation += "BACKCARD.png";
+                    break;
             }
 
            
@@ -165,7 +172,8 @@ namespace Uno
 		Green,
 		Blue,
 		Yellow,
-		Black
+		Black,
+        None
 	}
 
 	public enum CardCaption : byte
@@ -191,6 +199,7 @@ namespace Uno
 		/// </summary>
 		Take4,
 		WishColor,
+        None
 	}
 }
 

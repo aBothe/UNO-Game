@@ -30,22 +30,27 @@
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ln_aktuelleKarte = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.Bn_Return = new System.Windows.Forms.Button();
+            this.Bn_Forward = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.Ln_Player4 = new System.Windows.Forms.Label();
+            this.Pb_Player4 = new System.Windows.Forms.PictureBox();
+            this.Ln_player3 = new System.Windows.Forms.Label();
+            this.Pb_Player3 = new System.Windows.Forms.PictureBox();
+            this.Ln_Player2 = new System.Windows.Forms.Label();
+            this.Pb_Player2 = new System.Windows.Forms.PictureBox();
+            this.Lb_Card = new System.Windows.Forms.Label();
+            this.Pb_aktelleKarte = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_Player4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_Player3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_Player2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_aktelleKarte)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -53,105 +58,170 @@
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 26);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(768, 281);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 56.26102F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.73898F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(980, 567);
             this.tableLayoutPanel1.TabIndex = 0;
             this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.pictureBox7);
-            this.panel1.Controls.Add(this.pictureBox6);
-            this.panel1.Controls.Add(this.pictureBox5);
-            this.panel1.Controls.Add(this.pictureBox4);
-            this.panel1.Controls.Add(this.pictureBox3);
-            this.panel1.Controls.Add(this.pictureBox2);
+            this.panel1.Controls.Add(this.ln_aktuelleKarte);
             this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.Bn_Return);
+            this.panel1.Controls.Add(this.Bn_Forward);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 143);
+            this.panel1.Location = new System.Drawing.Point(3, 321);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(762, 135);
+            this.panel1.Size = new System.Drawing.Size(974, 243);
             this.panel1.TabIndex = 0;
+            // 
+            // ln_aktuelleKarte
+            // 
+            this.ln_aktuelleKarte.AutoSize = true;
+            this.ln_aktuelleKarte.Location = new System.Drawing.Point(345, 219);
+            this.ln_aktuelleKarte.Name = "ln_aktuelleKarte";
+            this.ln_aktuelleKarte.Size = new System.Drawing.Size(161, 13);
+            this.ln_aktuelleKarte.TabIndex = 3;
+            this.ln_aktuelleKarte.Text = "Zeigt die Aktuellle Zahl der Karte";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(374, 90);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(111, 126);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // pictureBox2
+            // Bn_Return
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(120, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(112, 126);
-            this.pictureBox2.TabIndex = 1;
-            this.pictureBox2.TabStop = false;
+            this.Bn_Return.Location = new System.Drawing.Point(293, 136);
+            this.Bn_Return.Name = "Bn_Return";
+            this.Bn_Return.Size = new System.Drawing.Size(75, 23);
+            this.Bn_Return.TabIndex = 2;
+            this.Bn_Return.Text = "Return";
+            this.Bn_Return.UseVisualStyleBackColor = true;
+            this.Bn_Return.Click += new System.EventHandler(this.Bn_Return_Click);
             // 
-            // pictureBox3
+            // Bn_Forward
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(238, 0);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(86, 129);
-            this.pictureBox3.TabIndex = 2;
-            this.pictureBox3.TabStop = false;
+            this.Bn_Forward.Location = new System.Drawing.Point(491, 136);
+            this.Bn_Forward.Name = "Bn_Forward";
+            this.Bn_Forward.Size = new System.Drawing.Size(75, 23);
+            this.Bn_Forward.TabIndex = 1;
+            this.Bn_Forward.Text = "Forward";
+            this.Bn_Forward.UseVisualStyleBackColor = true;
+            this.Bn_Forward.Click += new System.EventHandler(this.Bn_Forward_Click);
             // 
-            // pictureBox4
+            // panel2
             // 
-            this.pictureBox4.Location = new System.Drawing.Point(330, 3);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(103, 126);
-            this.pictureBox4.TabIndex = 3;
-            this.pictureBox4.TabStop = false;
+            this.panel2.Controls.Add(this.Ln_Player4);
+            this.panel2.Controls.Add(this.Pb_Player4);
+            this.panel2.Controls.Add(this.Ln_player3);
+            this.panel2.Controls.Add(this.Pb_Player3);
+            this.panel2.Controls.Add(this.Ln_Player2);
+            this.panel2.Controls.Add(this.Pb_Player2);
+            this.panel2.Controls.Add(this.Lb_Card);
+            this.panel2.Controls.Add(this.Pb_aktelleKarte);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(974, 312);
+            this.panel2.TabIndex = 1;
             // 
-            // pictureBox5
+            // Ln_Player4
             // 
-            this.pictureBox5.Location = new System.Drawing.Point(439, 3);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(90, 126);
-            this.pictureBox5.TabIndex = 4;
-            this.pictureBox5.TabStop = false;
+            this.Ln_Player4.AutoSize = true;
+            this.Ln_Player4.Location = new System.Drawing.Point(870, 288);
+            this.Ln_Player4.Name = "Ln_Player4";
+            this.Ln_Player4.Size = new System.Drawing.Size(42, 13);
+            this.Ln_Player4.TabIndex = 7;
+            this.Ln_Player4.Text = "Player4";
             // 
-            // pictureBox6
+            // Pb_Player4
             // 
-            this.pictureBox6.Location = new System.Drawing.Point(535, 3);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(98, 126);
-            this.pictureBox6.TabIndex = 5;
-            this.pictureBox6.TabStop = false;
+            this.Pb_Player4.Location = new System.Drawing.Point(853, 152);
+            this.Pb_Player4.Name = "Pb_Player4";
+            this.Pb_Player4.Size = new System.Drawing.Size(85, 133);
+            this.Pb_Player4.TabIndex = 6;
+            this.Pb_Player4.TabStop = false;
             // 
-            // pictureBox7
+            // Ln_player3
             // 
-            this.pictureBox7.Location = new System.Drawing.Point(639, 0);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(96, 129);
-            this.pictureBox7.TabIndex = 6;
-            this.pictureBox7.TabStop = false;
+            this.Ln_player3.AutoSize = true;
+            this.Ln_player3.Location = new System.Drawing.Point(431, 128);
+            this.Ln_player3.Name = "Ln_player3";
+            this.Ln_player3.Size = new System.Drawing.Size(41, 13);
+            this.Ln_player3.TabIndex = 5;
+            this.Ln_player3.Text = "player3";
+            // 
+            // Pb_Player3
+            // 
+            this.Pb_Player3.Location = new System.Drawing.Point(406, 3);
+            this.Pb_Player3.Name = "Pb_Player3";
+            this.Pb_Player3.Size = new System.Drawing.Size(100, 122);
+            this.Pb_Player3.TabIndex = 4;
+            this.Pb_Player3.TabStop = false;
+            // 
+            // Ln_Player2
+            // 
+            this.Ln_Player2.AutoSize = true;
+            this.Ln_Player2.Location = new System.Drawing.Point(39, 288);
+            this.Ln_Player2.Name = "Ln_Player2";
+            this.Ln_Player2.Size = new System.Drawing.Size(42, 13);
+            this.Ln_Player2.TabIndex = 3;
+            this.Ln_Player2.Text = "Player2";
+            // 
+            // Pb_Player2
+            // 
+            this.Pb_Player2.Location = new System.Drawing.Point(18, 162);
+            this.Pb_Player2.Name = "Pb_Player2";
+            this.Pb_Player2.Size = new System.Drawing.Size(86, 123);
+            this.Pb_Player2.TabIndex = 2;
+            this.Pb_Player2.TabStop = false;
+            // 
+            // Lb_Card
+            // 
+            this.Lb_Card.AutoSize = true;
+            this.Lb_Card.Location = new System.Drawing.Point(414, 291);
+            this.Lb_Card.Name = "Lb_Card";
+            this.Lb_Card.Size = new System.Drawing.Size(73, 13);
+            this.Lb_Card.TabIndex = 1;
+            this.Lb_Card.Text = "Aktuelle Karte";
+            // 
+            // Pb_aktelleKarte
+            // 
+            this.Pb_aktelleKarte.Location = new System.Drawing.Point(406, 162);
+            this.Pb_aktelleKarte.Name = "Pb_aktelleKarte";
+            this.Pb_aktelleKarte.Size = new System.Drawing.Size(100, 126);
+            this.Pb_aktelleKarte.TabIndex = 0;
+            this.Pb_aktelleKarte.TabStop = false;
             // 
             // GameField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 375);
+            this.ClientSize = new System.Drawing.Size(1004, 605);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "GameField";
             this.Text = "GameField";
             this.Load += new System.EventHandler(this.GameField_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_Player4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_Player3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_Player2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pb_aktelleKarte)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -160,12 +230,18 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox pictureBox7;
-        private System.Windows.Forms.PictureBox pictureBox6;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button Bn_Return;
+        private System.Windows.Forms.Button Bn_Forward;
+        private System.Windows.Forms.Label ln_aktuelleKarte;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label Lb_Card;
+        private System.Windows.Forms.PictureBox Pb_aktelleKarte;
+        private System.Windows.Forms.Label Ln_Player4;
+        private System.Windows.Forms.PictureBox Pb_Player4;
+        private System.Windows.Forms.Label Ln_player3;
+        private System.Windows.Forms.PictureBox Pb_Player3;
+        private System.Windows.Forms.Label Ln_Player2;
+        private System.Windows.Forms.PictureBox Pb_Player2;
     }
 }

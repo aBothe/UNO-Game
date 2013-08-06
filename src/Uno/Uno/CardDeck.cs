@@ -120,6 +120,15 @@ namespace Uno.Game
 			return hand;
 		}
 
+        public Card GiveCard() {
+            int n = (CardList.Count)-1;
+            Card card = CardList[n];
+            CardList.RemoveAt(n);
+            return card;
+        }
+
+      
+
 		public bool Put(Card c)
 		{
 			if (CardList.Contains (c))

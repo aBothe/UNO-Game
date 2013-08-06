@@ -12,6 +12,10 @@ namespace Uno.Uno
     public partial class GameField : Form
     {
         List<PictureBox> KartenBilder = new List<PictureBox>();
+        List<Bitmap> bilder = new List<Bitmap>();
+        List<Card> spielerHand = new List<Card>();
+        Card backCard = new Card(CardColor.None, CardCaption.None);
+        int aktuellePoistionHand = 0;
         
         CardDeck deck = new CardDeck();
 
@@ -19,39 +23,59 @@ namespace Uno.Uno
         {
             InitializeComponent();
             deck.Reset();
-            for (int i = 0; i < 7; i++)
-            {
+           
                 KartenBilder.Add(pictureBox1);
-                KartenBilder.Add(pictureBox2);
-                KartenBilder.Add(pictureBox3);
-                KartenBilder.Add(pictureBox4);
-                KartenBilder.Add(pictureBox5);
-                KartenBilder.Add(pictureBox6);
-                KartenBilder.Add(pictureBox7);
-            }
+         
+            
         }
 
         private void GameField_Load(object sender, EventArgs e)
         {
             tableLayoutPanel1.Dock = DockStyle.Fill;
-           
+            Pb_aktelleKarte.Image = deck.GiveCard().getImage();
+            Pb_Player2.Image = backCard.getImage();
+            Pb_Player3.Image = backCard.getImage();
+            Pb_Player4.Image = backCard.getImage();
 
-            List<Card> card = deck.GiveFirstHand();
+           spielerHand = deck.GiveFirstHand();
 
             for (int i = 0; i < 7; i++)
             {
-                Bitmap bild = card[i].getImage();
+                Bitmap bild = spielerHand[i].getImage();
+                bilder.Add(bild);
 
-
-                KartenBilder[i].Image = bild;
-                KartenBilder[i].Height = bild.Height;
-                KartenBilder[i].Width = bild.Width;
+            
             }
+            pictureBox1.Image = bilder[aktuellePoistionHand];
+          //  pictureBox1.Height = bilder[aktuellePoistionHand].Height;
+          //  pictureBox1.Width = bilder[aktuellePoistionHand].Width;
+            ln_aktuelleKarte.Text = aktuellePoistionHand.ToString();
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void Bn_Forward_Click(object sender, EventArgs e)
+        {
+            aktuellePoistionHand = (aktuellePoistionHand + 1) % spielerHand.Count;
+            pictureBox1.Image = bilder[aktuellePoistionHand];
+           // pictureBox1.Height = bilder[aktuellePoistionHand].Height;
+           // pictureBox1.Width = bilder[aktuellePoistionHand].Width;
+            ln_aktuelleKarte.Text = aktuellePoistionHand.ToString();
+        }
+
+        private void Bn_Return_Click(object sender, EventArgs e)
+        {
+            if (aktuellePoistionHand > 0)
+            {
+                aktuellePoistionHand = (aktuellePoistionHand - 1) % spielerHand.Count;
+            }
+            pictureBox1.Image = bilder[aktuellePoistionHand];
+          //  pictureBox1.Height = bilder[aktuellePoistionHand].Height;
+          //  pictureBox1.Width = bilder[aktuellePoistionHand].Width;
+            ln_aktuelleKarte.Text = aktuellePoistionHand.ToString();
         }
     }
 }
