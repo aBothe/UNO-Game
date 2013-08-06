@@ -34,18 +34,20 @@ namespace Uno.Game
 {
 	public abstract class HostBackend : IDisposable
 	{
-		public const int ClientToServerCommunicationPort = 55001;
-		public const int ServerToClientCommunicationPort = 55002;
+		public const int ServerPort = 55001;
 		UdpClient udp;
 
 		public IPEndPoint Address{get{return udp.Client.LocalEndPoint as IPEndPoint;}}
 
-		public HostBackend (int port)
+		public HostBackend (int port = 0)
 		{
 			udp = new UdpClient ();
 			udp.ExclusiveAddressUse = false;
+			udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
-			udp.Client.Bind (new IPEndPoint(IPAddress.Any,port));
+			// Nur an bestimmten Port binden, wenn dies verlangt ist. Andernfalls macht UdpClient dies automatisch und sucht einen freien Port aus!
+			if(port > 0)
+				udp.Client.Bind (new IPEndPoint(IPAddress.Any,port));
 
 			var listenerThread = new Thread(listenerTh);
 			listenerThread.IsBackground = true;
@@ -80,7 +82,8 @@ namespace Uno.Game
 
 		void listenerTh()
 		{
-			while(udp.Client.IsBound)
+			while(true//udp.Client.IsBound
+			      )
 			{
 				IPEndPoint targetAddress = null;
 				var data = udp.Receive(ref targetAddress);

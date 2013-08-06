@@ -67,12 +67,10 @@ namespace Uno.Game
 			var conn = fact.CreateConnection();
 
 			conn.HostId = hostId;
-			conn.HostAddress = new IPEndPoint(ip, ClientToServerCommunicationPort);
+			conn.HostAddress = new IPEndPoint(ip, ServerPort);
 
 			return conn;
 		}
-
-		protected GameConnection() : base(ServerToClientCommunicationPort) {}
 
 		public virtual void Initialize(string nick)
 		{

@@ -110,7 +110,7 @@ namespace Uno.Game
 		#endregion
 
 		#region Init / Constructor
-		public GameHost() : base(ClientToServerCommunicationPort)
+		public GameHost() : base(ServerPort)
 		{
 
 		}

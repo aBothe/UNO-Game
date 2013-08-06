@@ -30,7 +30,7 @@ namespace Uno.Game
 			if (!GameHost.IsHosting)
 				return null;
 
-			var lobby = TryJoinGame (host.Address.Address, host.Id, nickName, ghf);
+			var lobby = TryJoinGame (IPAddress.None, host.Id, nickName, ghf);
 
 			if (lobby == null)
 				host.Shutdown ();
