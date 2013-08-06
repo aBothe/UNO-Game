@@ -46,6 +46,9 @@ namespace Uno.Game
 
 		ChatMessage,
 
+		GameStarted,
+		GameFinished,
+
 		GameData,
 
 		PlayerInfo,

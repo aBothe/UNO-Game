@@ -35,18 +35,22 @@ namespace Uno.Game
 				SetPlayerReady (value);
 			}
 		}
+		public bool IsGameStartable{ get; private set;}
 		#endregion
 
 		#region Events
-		public delegate void ConnectedHandler();
-		public event ConnectedHandler Connected;
+		public delegate void NoArgDelegate();
+		public event NoArgDelegate Connected;
 
 		public delegate void DisconnectedHandler(ClientMessage msg, string reason);
 		public event DisconnectedHandler Disconnected;
 
 		public delegate void ChatHandler (string nick, string message);
-
 		public event ChatHandler ChatArrived;
+
+		public event NoArgDelegate GameStarted;
+		public event Action<bool> GameFinished;
+
 		public event Action<bool> ReadyStateChanged;
 		public event Action<string> OtherPlayerLeft;
 
@@ -178,6 +182,21 @@ namespace Uno.Game
 						ChatArrived (nick, chat);
 					break;
 
+				case ClientMessage.GameStarted:
+					OnGameStarted ();
+
+					if (GameStarted != null)
+						GameStarted ();
+					break;
+				case ClientMessage.GameFinished:
+					var aborted = r.ReadBoolean ();
+
+					OnGameFinished (aborted);
+
+					if (GameFinished != null)
+						GameFinished (aborted);
+					break;
+
 				case ClientMessage.GameData:
 					OnGameDataReceived (r);
 					break;
@@ -267,5 +286,7 @@ namespace Uno.Game
 		#endregion
 
 		protected virtual void OnGameDataReceived(BinaryReader r) {}
+		protected virtual void OnGameStarted() {}
+		protected virtual void OnGameFinished(bool aborted) {}
 	}
 }

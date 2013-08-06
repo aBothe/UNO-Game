@@ -119,6 +119,8 @@ namespace Uno.Game
 				return true;
 			}
 		}
+
+		public event Action<bool> GameStartabilityChanged;
 		#endregion
 
 		#region Init / Constructor
@@ -242,6 +244,7 @@ namespace Uno.Game
 
 						// Send update to clients
 						DistributePlayerUpdate (player);
+						CheckGameStartable ();
 					}
 					break;
 
@@ -315,6 +318,7 @@ namespace Uno.Game
 
 		protected virtual void OnPlayerAdded(Player player)	{
 			DistributePlayerUpdate (player);
+			CheckGameStartable ();
 		}
 		protected virtual void OnPlayerDisconnecting(Player p,ClientMessage reason) {}
 
@@ -325,6 +329,7 @@ namespace Uno.Game
 				w.Write (p.Nick);
 
 				SendToAllPlayers (ms.ToArray ());
+				CheckGameStartable ();
 			}
 		}
 		protected virtual void OnComposePlayerInfo(Player p, BinaryWriter w) {}
@@ -441,6 +446,43 @@ namespace Uno.Game
 					BitConverter.GetBytes (p.Id).CopyTo (actData, 0);
 					Send (actData, p.Address);
 				}
+		}
+
+		public void CheckGameStartable()
+		{
+			if(GameStartabilityChanged != null)
+				GameStartabilityChanged (ReadyToPlay);
+		}
+
+		public bool StartGame()
+		{
+			if (!ReadyToPlay)
+				return false;
+
+			State = GameState.StartPlaying;
+
+			if (!StartGameInternal ()) {
+				State = GameState.WaitingForPlayers;
+				return false;
+			}
+
+			State = GameState.Playing;
+
+			SendToAllPlayers (new[] { (byte)ClientMessage.GameStarted });
+
+			return true;
+		}
+
+		protected abstract bool StartGameInternal();
+
+		/// <summary>
+		/// Notices the host engine that the game has been finished. Must be called by the Game in order to keep the flow consistent!
+		/// </summary>
+		protected void NoticeGameFinished(bool aborted = false)
+		{
+			State = GameState.GameFinished;
+			SendToAllPlayers (new[] { (byte)ClientMessage.GameFinished, (byte)(aborted?1:0) });
+			State = GameState.WaitingForPlayers;
 		}
 		#endregion
 	}

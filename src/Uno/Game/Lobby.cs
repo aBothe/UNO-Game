@@ -75,6 +75,8 @@ namespace Uno.Game
         {
 			if (!IsAdmin) {
 				panel_Admin.Visible = false;
+			} else {
+				GameHost.Instance.GameStartabilityChanged += GameReadyStateChanged;
 			}
         }
 		#endregion
@@ -189,7 +191,7 @@ namespace Uno.Game
 		#region Buttons
 		private void button_StartGame_Click(object sender, EventArgs e)
 		{
-
+			GameHost.Instance.StartGame ();
 		}
 
 		private void button_KickPlayers_Click(object sender, EventArgs e)
@@ -208,6 +210,11 @@ namespace Uno.Game
 		{
 			if(e.KeyCode == Keys.Return)
 				button_SendChat_Click (sender, e);
+		}
+
+		void GameReadyStateChanged(bool ready)
+		{
+			button_StartGame.Enabled = ready;
 		}
 
 		void ReadyStateChanged(bool ready)

@@ -77,6 +77,11 @@ namespace Uno
 		public UnoHost ()
 		{
 		}
+
+		protected override bool StartGameInternal ()
+		{
+			return true;
+		}
 	}
 
 	public class UnoHostFactory : Game.GameHostFactory
