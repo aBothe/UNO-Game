@@ -73,9 +73,10 @@ namespace Uno.Game
 
 		public Player GetPlayer(long id)
 		{
-			foreach (var p in players)
-				if (p.Id == id)
-					return p;
+			lock(players)
+				foreach (var p in players)
+					if (p.Id == id)
+						return p;
 			return null;
 		}
 
@@ -100,9 +101,10 @@ namespace Uno.Game
 				if (PlayerCount < MinPlayers || PlayerCount > MaxPlayers)
 					return false;
 
-				foreach (var p in players)
-					if (!p.ReadyToPlay)
-						return false;
+				lock(players)
+					foreach (var p in players)
+						if (!p.ReadyToPlay)
+							return false;
 
 				return true;
 			}
@@ -135,11 +137,6 @@ namespace Uno.Game
 		#endregion
 
 		#region Exit / Destructor
-		public override void Dispose ()
-		{
-			State = GameState.ShuttingDown;
-		}
-
 		public static bool ShutDown()
 		{
 			if (Instance == null)
@@ -152,6 +149,10 @@ namespace Uno.Game
 
 		public virtual void Shutdown()
 		{
+			State = GameState.ShuttingDown;
+
+			SendToAllPlayers (new[] { (byte)ClientMessage.ServerShutdown });
+
 			Dispose ();
 		}
 		#endregion
@@ -326,7 +327,8 @@ namespace Uno.Game
 			if(player != null)
 			{
 				OnPlayerDisconnecting (player, reason);
-				players.Remove (player);
+				lock(players)
+					players.Remove (player);
 				w.Write (id);
 				w.Write ((byte)reason);
 				if (message == null)

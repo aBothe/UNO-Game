@@ -147,6 +147,10 @@ namespace Uno.Game
 				case ClientMessage.JoinDenied:
 					OnDisconnected (msg, r.ReadString ());
 					break;
+				
+				case ClientMessage.ServerShutdown:
+					OnDisconnected (msg, string.Empty);
+					break;
 
 				case ClientMessage.OtherPlayerLeft:
 					if (OtherPlayerLeft != null) {

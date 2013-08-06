@@ -31,7 +31,7 @@
 			System.Windows.Forms.Label label1;
 			System.Windows.Forms.Label label2;
 			this.button_StartGame = new System.Windows.Forms.Button();
-			this.button_Ready = new System.Windows.Forms.Button();
+			this.button_Ready = new System.Windows.Forms.CheckBox();
 			this.list_Players = new System.Windows.Forms.ListBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.text_ChatLog = new System.Windows.Forms.TextBox();
@@ -56,7 +56,6 @@
 			this.button_StartGame.Size = new System.Drawing.Size(117, 23);
 			this.button_StartGame.TabIndex = 1;
 			this.button_StartGame.Text = "Start Game";
-			this.button_StartGame.UseVisualStyleBackColor = true;
 			// 
 			// button_Ready
 			// 
@@ -66,7 +65,8 @@
 			this.button_Ready.Size = new System.Drawing.Size(75, 23);
 			this.button_Ready.TabIndex = 0;
 			this.button_Ready.Text = "Ready";
-			this.button_Ready.UseVisualStyleBackColor = true;
+			this.button_Ready.Appearance = System.Windows.Forms.Appearance.Button;
+			this.button_Ready.Click += button_Ready_Click;
 			// 
 			// list_Players
 			// 
@@ -142,7 +142,6 @@
 			this.button_SendChat.Size = new System.Drawing.Size(43, 21);
 			this.button_SendChat.TabIndex = 6;
 			this.button_SendChat.Text = "Say";
-			this.button_SendChat.UseVisualStyleBackColor = true;
 			this.button_SendChat.Click += button_SendChat_Click;
 			// 
 			// button_ReturnToLobby
@@ -153,7 +152,6 @@
 			this.button_ReturnToLobby.Size = new System.Drawing.Size(104, 23);
 			this.button_ReturnToLobby.TabIndex = 6;
 			this.button_ReturnToLobby.Text = "Return to Lobby";
-			this.button_ReturnToLobby.UseVisualStyleBackColor = true;
 			this.button_ReturnToLobby.Click += new System.EventHandler(this.button_ReturnToLobby_Click);
 			// 
 			// panel_Admin
@@ -172,7 +170,6 @@
 			this.button_KickPlayers.Size = new System.Drawing.Size(120, 23);
 			this.button_KickPlayers.TabIndex = 8;
 			this.button_KickPlayers.Text = "Kick selected players";
-			this.button_KickPlayers.UseVisualStyleBackColor = true;
 			// 
 			// Lobby
 			// 
@@ -202,7 +199,7 @@
         #endregion
 
 		private System.Windows.Forms.Button button_StartGame;
-		private System.Windows.Forms.Button button_Ready;
+		private System.Windows.Forms.CheckBox button_Ready;
 		private System.Windows.Forms.ListBox list_Players;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.TextBox text_ChatMessage;

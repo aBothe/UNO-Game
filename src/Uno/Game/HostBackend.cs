@@ -36,6 +36,9 @@ namespace Uno.Game
 	{
 		public const int ServerPort = 55001;
 		UdpClient udp;
+		ManualResetEvent dataReceivedEvt = new ManualResetEvent(true);
+		bool disposed;
+		Thread listenerThread;
 
 		public IPEndPoint Address{get{return udp.Client.LocalEndPoint as IPEndPoint;}}
 
@@ -46,17 +49,24 @@ namespace Uno.Game
 			udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
 			// Nur an bestimmten Port binden, wenn dies verlangt ist. Andernfalls macht UdpClient dies automatisch und sucht einen freien Port aus!
-			if(port > 0)
-				udp.Client.Bind (new IPEndPoint(IPAddress.Any,port));
+			if (port > 0) {
+				udp.Client.Bind (new IPEndPoint (IPAddress.Any, port));
 
-			var listenerThread = new Thread(listenerTh);
-			listenerThread.IsBackground = true;
-			listenerThread.Start ();
+			}
+
+			InitListener ();
 		}
 
 		public virtual void Dispose()
 		{
+			dataReceivedEvt.Reset ();
+			disposed = true;
 			udp.Close ();
+		}
+
+		~HostBackend()
+		{
+			Dispose ();
 		}
 
 		protected abstract void DataReceived(IPEndPoint ep,BinaryReader data);
@@ -72,24 +82,44 @@ namespace Uno.Game
 			foreach (var d in data)
 				l.AddRange (d);
 
-			udp.Send (l.ToArray(), l.Count, ep);
+			if(!disposed)
+				udp.Send (l.ToArray(), l.Count, ep);
 		}
 
 		protected void Send(byte[] data, IPEndPoint ep)
 		{
-			udp.Send (data, data.Length, ep);
+			if(!disposed)
+				udp.Send (data, data.Length, ep);
+		}
+
+		void InitListener()
+		{
+			if (listenerThread != null && listenerThread.IsAlive)
+				return;
+
+			listenerThread = new Thread(listenerTh);
+			listenerThread.IsBackground = true;
+			listenerThread.Start ();
 		}
 
 		void listenerTh()
 		{
-			while(true//udp.Client.IsBound
-			      )
+			while(udp.Client != null && dataReceivedEvt.WaitOne(0))
 			{
+				byte[] data = null;
 				IPEndPoint targetAddress = null;
-				var data = udp.Receive(ref targetAddress);
-				using(var ms = new MemoryStream(data))
-				using(var br = new BinaryReader(ms))
-				DataReceived (targetAddress,br);
+				try{
+					data = udp.Receive(ref targetAddress);
+				}catch(SocketException ex) {
+					if (dataReceivedEvt.WaitOne (0))
+						throw ex;
+				}
+
+				if (data != null) {
+					using (var ms = new MemoryStream(data))
+					using (var br = new BinaryReader(ms))
+						DataReceived (targetAddress, br);
+				}
 			}
 		}
 	}

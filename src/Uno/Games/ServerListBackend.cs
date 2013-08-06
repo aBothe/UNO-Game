@@ -67,6 +67,7 @@ namespace Uno.Games
 		~ServerListBackend()
 		{
 			GameHost.AnyGameStateChanged -= ThisHostStateChanged;
+			udp.Close ();
 		}
 
 		void ThisHostStateChanged(object sender, GameStateChangedArgs ea)
@@ -88,13 +89,13 @@ namespace Uno.Games
 		public void SendHostUpdate(GameHost host)
 		{
 			var d = GameHostEntry.SerializeHost(host);
-			if (d != null)
+			if (d != null && udp.Client != null)
 				udp.Send(d, d.Length, multicastEndpoint);
 		}
 
 		void listenerTh()
 		{
-			while(true)
+			while(udp.Client != null)
 			{
 				IPEndPoint targetAddress = null;
 				var data = udp.Receive(ref targetAddress);

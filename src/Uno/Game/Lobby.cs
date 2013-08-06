@@ -52,6 +52,7 @@ namespace Uno.Game
 			con.GeneralPlayerInfoReceived += lobby.PlayerInfoReceived;
 			con.OtherPlayerLeft += lobby.OtherPlayerLeft;
 			con.ChatArrived += lobby.ChatMessageReceived;
+			con.ReadyStateChanged += lobby.ReadStateChanged;
 
 			lobby.Connection = con;
 
@@ -88,6 +89,12 @@ namespace Uno.Game
 		void Disconnected(ClientMessage reason, string message)
 		{
 			ConnectedEvent.Reset ();
+
+			Connection.Dispose ();
+			Connection = null;
+
+			Invoke(new MethodInvoker(Close));
+
 			string title;
 			switch (reason) {
 				default:
@@ -102,9 +109,13 @@ namespace Uno.Game
 				case ClientMessage.Timeout:
 					title = "Timeout";
 					break;
+				case ClientMessage.ServerShutdown:
+					title = "Shutdown";
+					message = "Server was shut down";
+					break;
 			}
+
 			MessageBox.Show (message, title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-			Close ();
 		}
 
 		Font boldFont;
@@ -178,6 +189,16 @@ namespace Uno.Game
 				button_SendChat_Click (sender, e);
 		}
 
+		void ReadStateChanged(bool ready)
+		{
+			button_Ready.Checked = ready;
+		}
+
+		private void button_Ready_Click(object sender, EventArgs e)
+		{
+			Connection.IsPlayerReady = button_Ready.Checked;
+		}
+
 		private void button_SendChat_Click(object sender, EventArgs e)
 		{
 			var t = text_ChatMessage.Text;
@@ -194,12 +215,12 @@ namespace Uno.Game
 		{
 			base.OnHandleDestroyed (e);
 
-			Connection.Disconnect ();
 			GameHost.ShutDown ();
 		}
 
 		private void button_ReturnToLobby_Click(object sender, EventArgs e)
 		{
+			Connection.Disconnect ();
 			Close();
 		}
 		#endregion

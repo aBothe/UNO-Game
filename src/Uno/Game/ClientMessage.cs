@@ -36,7 +36,9 @@ namespace Uno.Game
 		JoinDenied,
 		Kicked,
 		Disconnected,
+		ServerShutdown,
 		Timeout,
+
 		KeepAlive,
 
 		OtherPlayerLeft,
