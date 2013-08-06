@@ -61,13 +61,13 @@ namespace Uno.Game
 		/// <param name="ip">Ip.</param>
 		/// <param name="hostId">Host identifier.</param>
 		/// <param name="fact">Fact.</param>
-		public static GameConnection Create(IPEndPoint ip, long hostId, 
+		public static GameConnection Create(IPAddress ip, long hostId, 
 		                                                    GameHostFactory fact)
 		{
 			var conn = fact.CreateConnection();
 
 			conn.HostId = hostId;
-			conn.HostAddress = ip;
+			conn.HostAddress = new IPEndPoint(ip, ClientToServerCommunicationPort);
 
 			return conn;
 		}
@@ -106,6 +106,18 @@ namespace Uno.Game
 			connected = false;
 			if(Disconnected != null)
 				Disconnected(msg, reason);
+		}
+
+		public void Disconnect()
+		{
+			using (var ms = new MemoryStream ())
+				using (var w = new BinaryWriter (ms)) {
+				w.Write (HostId);
+				w.Write ((byte)HostMessage.Disconnect);
+				w.Write (PlayerId);
+
+				Send (ms, HostAddress);
+			}
 		}
 
 		protected override void DataReceived (IPEndPoint ep, BinaryReader r)

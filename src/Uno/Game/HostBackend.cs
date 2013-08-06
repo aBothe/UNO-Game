@@ -38,14 +38,14 @@ namespace Uno.Game
 		public const int ServerToClientCommunicationPort = 55002;
 		UdpClient udp;
 
-		public readonly IPEndPoint Address;
+		public IPEndPoint Address{get{return udp.Client.LocalEndPoint as IPEndPoint;}}
 
 		public HostBackend (int port)
 		{
 			udp = new UdpClient ();
 			udp.ExclusiveAddressUse = false;
 
-			udp.Client.Bind (Address = new IPEndPoint(IPAddress.Any,port));
+			udp.Client.Bind (new IPEndPoint(IPAddress.Any,port));
 
 			var listenerThread = new Thread(listenerTh);
 			listenerThread.IsBackground = true;

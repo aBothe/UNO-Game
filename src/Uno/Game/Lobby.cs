@@ -30,7 +30,7 @@ namespace Uno.Game
 			if (!GameHost.IsHosting)
 				return null;
 
-			var lobby = TryJoinGame (host.Address, host.Id, nickName, ghf);
+			var lobby = TryJoinGame (host.Address.Address, host.Id, nickName, ghf);
 
 			if (lobby == null)
 				host.Shutdown ();
@@ -38,7 +38,7 @@ namespace Uno.Game
 			return lobby;
 		}
 
-		public static Lobby TryJoinGame(IPEndPoint ip, long hostId, string nickName, GameHostFactory ghf)
+		public static Lobby TryJoinGame(IPAddress ip, long hostId, string nickName, GameHostFactory ghf)
 		{
 			var lobby = new Lobby();
 
@@ -190,9 +190,16 @@ namespace Uno.Game
 			text_ChatMessage.Clear ();
 		}
 
+		protected override void OnHandleDestroyed (EventArgs e)
+		{
+			base.OnHandleDestroyed (e);
+
+			Connection.Disconnect ();
+			GameHost.ShutDown ();
+		}
+
 		private void button_ReturnToLobby_Click(object sender, EventArgs e)
 		{
-			GameHost.ShutDown ();
 			Close();
 		}
 		#endregion

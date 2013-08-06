@@ -93,6 +93,7 @@
 			this.list_Servers.Size = new System.Drawing.Size(305, 223);
 			this.list_Servers.TabIndex = 1;
 			this.list_Servers.SelectedIndexChanged += list_Servers_Select;
+			this.list_Servers.DoubleClick += Click_JoinGame;
 			// 
 			// text_Nick
 			// 
