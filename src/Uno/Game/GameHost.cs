@@ -209,6 +209,7 @@ namespace Uno.Game
 						w.Write (player.Nick);
 
 						players.Add (player);
+						//Info: The package sent in OnPlayerAdded will not be received by the recently connected player - because the JoinGranted message will arrive later!
 						OnPlayerAdded (player);
 					} else {
 						w.Write ((byte)ClientMessage.JoinDenied);

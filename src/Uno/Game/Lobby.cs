@@ -88,7 +88,7 @@ namespace Uno.Game
 			ConnectedEvent.Set ();
 			Program.MainForm.BeginInvoke(new MethodInvoker(Show));
 
-			PlayerInfoReceived (Connection.PlayerNick, false, null);
+			Connection.AcquireGeneralPlayerInfo();
 		}
 
 		void Disconnected(ClientMessage reason, string message)
@@ -129,6 +129,9 @@ namespace Uno.Game
 		void DrawPlayerItem(object sender, DrawItemEventArgs e)
 		{
 			e.DrawBackground();
+
+			if (e.Index < 0)
+				return;
 
 			var pi = list_Players.Items [e.Index] as PlayerInfo;
 
