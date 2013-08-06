@@ -28,12 +28,14 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
-namespace Uno
+namespace Uno.Game
 {
 	public abstract class HostBackend : IDisposable
 	{
 		public const int ClientToServerCommunicationPort = 55001;
+		public const int ServerToClientCommunicationPort = 55002;
 		UdpClient udp;
 
 		public IPEndPoint Address
@@ -43,12 +45,12 @@ namespace Uno
 			}
 		}
 
-		public HostBackend ()
+		public HostBackend (int port)
 		{
 			udp = new UdpClient ();
 			udp.ExclusiveAddressUse = false;
 
-			udp.Client.Bind (new IPEndPoint(IPAddress.Any,ClientToServerCommunicationPort));
+			udp.Client.Bind (new IPEndPoint(IPAddress.Any,port));
 
 			var listenerThread = new Thread(listenerTh);
 			listenerThread.IsBackground = true;
@@ -60,11 +62,20 @@ namespace Uno
 			udp.Close ();
 		}
 
-		protected abstract void DataReceived(IPEndPoint ep,byte[] data);
+		protected abstract void DataReceived(IPEndPoint ep,BinaryReader data);
 
 		protected void Send(MemoryStream ms, IPEndPoint ep)
 		{
 			Send (ms.ToArray (), ep);
+		}
+
+		protected void Send(IPEndPoint ep, params IEnumerable<byte>[] data)
+		{
+			var l = new List<byte> ();
+			foreach (var d in data)
+				l.AddRange (d);
+
+			udp.Send (l.ToArray(), l.Count, ep);
 		}
 
 		protected void Send(byte[] data, IPEndPoint ep)
@@ -78,7 +89,9 @@ namespace Uno
 			{
 				IPEndPoint targetAddress = null;
 				var data = udp.Receive(ref targetAddress);
-				DataReceived (targetAddress,data);
+				using(var ms = new MemoryStream(data))
+				using(var br = new BinaryReader(ms))
+				DataReceived (targetAddress,br);
 			}
 		}
 	}

@@ -8,23 +8,15 @@ using System.IO;
 
 namespace Uno.Game
 {
-	public abstract class GameConnection : IDisposable
+	public abstract class GameConnection : HostBackend
 	{
 		#region Properties
-		public const int ServerToClientCommunicationPort = 55002;
-		UdpClient udp;
 		public IPEndPoint HostAddress { get; private set; }
 		public long HostId { get; private set; }
+
 		readonly long ConnectId = IdGenerator.GenerateId();
 		public long PlayerId {get; private set; }
 		public string PlayerNick { get; private set;}
-
-		public IPEndPoint Address
-		{
-			get{
-				return udp.Client.RemoteEndPoint as IPEndPoint;
-			}
-		}
 
 		bool connected;
 		public bool IsConnected
@@ -32,21 +24,46 @@ namespace Uno.Game
 			get{return connected;}
 		}
 
+		bool isPlayerReady;
+		public bool IsPlayerReady
+		{
+			get
+			{
+				return isPlayerReady;
+			}
+			set{
+				SetPlayerReady (value);
+			}
+		}
+		#endregion
+
+		#region Events
 		public delegate void ConnectedHandler();
 		public event ConnectedHandler Connected;
 
 		public delegate void DisconnectedHandler(ClientMessage msg, string reason);
 		public event DisconnectedHandler Disconnected;
 
+		public delegate void ChatHandler(string nick, string message);
+		public event ChatHandler ChatArrived;
+
+		public event Action<bool> ReadyStateChanged;
+
+		public event Action<string> OtherPlayerLeft;
 		#endregion
 
 		#region Init / Constructor
-		public static GameConnection TryEstablishConnection(IPEndPoint ip, long hostId, string nick, GameHostFactory fact, ConnectedHandler onconnected=null)
+		public static GameConnection TryEstablishConnection(IPEndPoint ip, long hostId, string nick, 
+		                                                    GameHostFactory fact, 
+		                                                    ConnectedHandler onconnected=null,
+		                                                    DisconnectedHandler ondisconnected = null)
 		{
 			var conn = fact.CreateConnection();
 
 			if(onconnected != null)
 				conn.Connected += onconnected;
+			if (ondisconnected != null)
+				conn.Disconnected += ondisconnected;
 
 			conn.HostId = hostId;
 			conn.Init (ip, nick);
@@ -54,43 +71,29 @@ namespace Uno.Game
 			return conn;
 		}
 
+		protected GameConnection() : base(ServerToClientCommunicationPort) {}
+
 		protected virtual void Init(IPEndPoint hostAddress, string nick)
 		{
 			HostAddress = hostAddress;
-			udp = new UdpClient();
-			udp.ExclusiveAddressUse = false;
-
-			udp.Client.Bind (new IPEndPoint(IPAddress.Any,ServerToClientCommunicationPort));
 
 			// Acquire approval from host
 			SendConnectionRequest (nick);
-
-			new Thread (listenerTh) {
-				IsBackground = true,
-				Name = "ClientListener"
-			}.Start ();
 		}
 
 		void SendConnectionRequest(string nick)
 		{
-			var ms = new MemoryStream ();
-			var w = new BinaryWriter (ms);
-			w.Write (HostId);
-			w.Write ((byte)HostMessage.Connect);
-			w.Write (ConnectId);
-			w.Write (nick);
+			using (var ms = new MemoryStream ())
+			using (var w = new BinaryWriter (ms)) {
+				w.Write (HostId);
+				w.Write ((byte)HostMessage.Connect);
+				w.Write (ConnectId);
+				w.Write (nick);
 
-			udp.Send (ms.ToArray (), (int)ms.Length, HostAddress);
-
-			w.Close ();
-			ms.Dispose ();
+				Send (ms, HostAddress);
+			}
 		}
 		#endregion
-
-		public virtual void Dispose()
-		{
-			udp.Close ();
-		}
 
 		protected virtual void OnConnected()
 		{
@@ -106,44 +109,136 @@ namespace Uno.Game
 				Disconnected(msg, reason);
 		}
 
-		void listenerTh()
+		protected override void DataReceived (IPEndPoint ep, BinaryReader r)
 		{
-			while(udp.Client.IsBound)
-			{
-				IPEndPoint targetAddress = null;
-				var data = udp.Receive(ref targetAddress);
-
-				var inputStream = new MemoryStream (data);
-				var r = new BinaryReader (inputStream);
-
-				// Id check
-				var id = r.ReadInt64 ();
-				if (PlayerId != 0) {
-					if (id != PlayerId)
-						return;
-				}
-				else if (ConnectId != id)
+			// Id check
+			var id = r.ReadInt64 ();
+			if (PlayerId != 0) {
+				if (id != PlayerId)
 					return;
+			}
+			else if (ConnectId != id)
+				return;
 
-				var msg = (ClientMessage)r.ReadByte ();
-				switch (msg) {
-					case ClientMessage.JoinGranted:
+			var msg = (ClientMessage)r.ReadByte ();
+			string nick;
 
-						PlayerId = r.ReadInt64 ();
-						PlayerNick = r.ReadString ();
+			switch (msg) {
+				case ClientMessage.JoinGranted:
 
-						OnConnected ();
-						break;
+					PlayerId = r.ReadInt64 ();
+					PlayerNick = r.ReadString ();
 
-					case ClientMessage.Kicked:
-					case ClientMessage.Disconnected:
-					case ClientMessage.Timeout:
-					case ClientMessage.JoinDenied:
-						OnDisconnected (msg, r.ReadString ());
-						break;
-				}
+					OnConnected ();
+					break;
 
+				case ClientMessage.Kicked:
+				case ClientMessage.Disconnected:
+				case ClientMessage.Timeout:
+				case ClientMessage.JoinDenied:
+					OnDisconnected (msg, r.ReadString ());
+					break;
+
+				case ClientMessage.OtherPlayerLeft:
+					if (OtherPlayerLeft != null) {
+						OtherPlayerLeft (r.ReadString ());
+					}
+					break;
+
+				case ClientMessage.IsReady:
+					isPlayerReady = r.ReadBoolean ();
+
+					if (ReadyStateChanged != null)
+						ReadyStateChanged (isPlayerReady);
+					break;
+
+				case ClientMessage.PlayerInfo:
+					//isPlayerReady = r.ReadBoolean ();
+					OnPlayerInfoReceived (r);
+					break;
+
+				case ClientMessage.ChatMessage:
+					nick = r.ReadString ();
+					var chat = r.ReadString ();
+
+					if (ChatArrived != null)
+						ChatArrived (nick, chat);
+					break;
+
+				case ClientMessage.GameData:
+					OnGameDataReceived (r);
+					break;
+
+				case ClientMessage.GeneralPlayersInfo:
+					var count = r.ReadByte ();
+					while (count-- > 0) {
+						nick = r.ReadString();
+						var isReady = r.ReadBoolean ();
+						OnGeneralPlayerInfoReceived (nick, isReady, r);
+					}
+					break;
 			}
 		}
+
+		#region Player
+
+		protected virtual void OnPlayerInfoReceived(BinaryReader r) {}
+		protected virtual void OnComposePlayerInfo(BinaryWriter w) {}
+
+		public void AcquirePlayerInfo()
+		{
+			using (var ms = new MemoryStream ())
+				using (var w = new BinaryWriter (ms)) {
+				w.Write (HostId);
+				w.Write ((byte)HostMessage.GetPlayerInfo);
+				w.Write (PlayerId);
+
+				Send (ms, HostAddress);
+			}
+		}
+
+		protected virtual void OnGeneralPlayerInfoReceived(string nick, bool isReady, BinaryReader r) {}
+
+		public void AcquireGeneralPlayerInfo()
+		{
+			using (var ms = new MemoryStream ())
+				using (var w = new BinaryWriter (ms)) {
+				w.Write (HostId);
+				w.Write ((byte)HostMessage.GetPlayersInfo);
+				w.Write (PlayerId);
+
+				Send (ms, HostAddress);
+			}
+		}
+
+		void SetPlayerReady(bool ready)
+		{
+			using (var ms = new MemoryStream ())
+			using (var w = new BinaryWriter (ms)) {
+				w.Write (HostId);
+				w.Write ((byte)HostMessage.SetReadyState);
+				w.Write (PlayerId);
+				w.Write (ready);
+
+				Send (ms, HostAddress);
+			}
+		}
+
+		public void SendChat(string message)
+		{
+			if(!string.IsNullOrEmpty(message))
+			using (var ms = new MemoryStream ())
+			using (var w = new BinaryWriter (ms)) {
+				w.Write (HostId);
+				w.Write ((byte)HostMessage.ChatMessage);
+				w.Write (message);
+
+				Send (ms, HostAddress);
+			}
+		}
+
+		#endregion
+
+		protected virtual void OnGameDataReceived(BinaryReader r) {}
 	}
 }

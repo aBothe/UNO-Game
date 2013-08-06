@@ -36,7 +36,10 @@ namespace Uno.Game
 		Disconnect,
 		KeepAlive,
 
+		ChatMessage,
 		GameData,
+
+		GetReadyState,
 		SetReadyState,
 		/// <summary>
 		/// Information about the own player

@@ -39,7 +39,13 @@ namespace Uno.Game
 		Timeout,
 		KeepAlive,
 
+		OtherPlayerLeft,
+		IsReady,
+
+		ChatMessage,
+
 		GameData,
+
 		PlayerInfo,
 		GeneralPlayersInfo,
 	}

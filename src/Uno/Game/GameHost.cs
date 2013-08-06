@@ -110,7 +110,8 @@ namespace Uno.Game
 		#endregion
 
 		#region Init / Constructor
-		public GameHost() {
+		public GameHost() : base(ClientToServerCommunicationPort)
+		{
 
 		}
 
@@ -123,12 +124,6 @@ namespace Uno.Game
 
 			// Initialisiert Spielhost, setzt den Host in den Lobbymodus, und wartet, 
 			// bis 2-10 Spieler verbunden & bereit sind + der Spielersteller das Spiel startet
-
-			/*
-			 * TCP-Listener binden, starten und auf Client-Connects warten.
-			 * Danach Daten/Statusupdates über alle Verbindungen schicken.
-			 * Clientseitige Updates erwarten (Aktionen, etwa Drücken des 'Bereit'-Buttons)
-			 */
 
 			Instance = host;
 
@@ -165,11 +160,8 @@ namespace Uno.Game
 
 
 		#region Messaging
-		protected override void DataReceived (IPEndPoint ep,byte[] data)
+		protected override void DataReceived (IPEndPoint ep,BinaryReader r)
 		{
-			var ms = new MemoryStream (data);
-			var r = new BinaryReader (ms);
-
 			// Ensure that the correct host was reached.
 			if (r.ReadInt64 () != Id)
 				return;
@@ -215,23 +207,55 @@ namespace Uno.Game
 					DisconnectPlayer (w,playerId, ClientMessage.Disconnected, "Disconnected by user", ep);
 					break;
 
+				case HostMessage.GetReadyState:
+					player = GetPlayer (playerId);
+
+					if (player != null) {
+						w.Write (playerId);
+						w.Write ((byte)ClientMessage.IsReady);
+						w.Write (player.ReadyToPlay);
+					}
+					break;
+
 				case HostMessage.SetReadyState:
 					if (State != GameState.WaitingForPlayers)
 						break;
 
 					player = GetPlayer (playerId);
 
-					if (player != null)
+					if (player != null) {
 						player.ReadyToPlay = r.ReadBoolean ();
+
+						// Send update to clients
+						DistributePlayerUpdate (player);
+					}
+					break;
+
+				case HostMessage.ChatMessage:
+					player = GetPlayer (playerId);
+
+					if (player == null)
+						break;
+
+					var chat = r.ReadString ();
+					if (!string.IsNullOrEmpty (chat)) {
+						using (var ms2 = new MemoryStream())
+						using (var w2 = new BinaryWriter(ms2)) {
+							w2.Write ((byte)ClientMessage.ChatMessage);
+							w2.Write (player.Nick);
+							w2.Write (chat);
+							SendToAllPlayers (ms2.ToArray ());
+						}
+					}
 					break;
 
 				case HostMessage.GameData:
 					w.Write (playerId);
-					var off = ms.Length;
+					var off = answer.Length;
 					OnGameDataReceived (GetPlayer (playerId), r, w);
 
-					if (ms.Length == off) {
-						ms.SetLength (0);
+					if (answer.Length == off) {
+						answer.SetLength (0);
 					}
 					break;
 
@@ -243,19 +267,22 @@ namespace Uno.Game
 						break;
 
 					w.Write (player.Id);
-					w.Write (player.ReadyToPlay);
+					w.Write ((byte)ClientMessage.PlayerInfo);
+					//w.Write (player.ReadyToPlay);
 
-					OnGetPlayerInfo (player, w);
+					OnComposePlayerInfo (player, w);
 					break;
+
 				case HostMessage.GetPlayersInfo:
 					w.Write (playerId);
+					w.Write ((byte)ClientMessage.GeneralPlayersInfo);
 
 					lock (players) {
 						w.Write ((byte)PlayerCount);
 						foreach (var p in players) {
 							w.Write (p.Nick);
 							w.Write (p.ReadyToPlay);
-							OnGetPlayerGeneralInfo (p, w);
+							OnComposeGeneralPlayerInfo (p, w);
 						}
 					}
 					break;
@@ -263,6 +290,7 @@ namespace Uno.Game
 
 			if(answer.Length > 0)
 				Send (answer, ep);
+
 			w.Close ();
 			answer.Dispose ();
 		}
@@ -273,12 +301,21 @@ namespace Uno.Game
 
 		protected virtual void OnPlayerAdded(Player player)	{}
 		protected virtual void OnPlayerDisconnecting(Player p,ClientMessage reason) {}
-		protected virtual void OnPlayerDisconnected(Player p,ClientMessage reason) {}
-		protected virtual void OnGetPlayerInfo(Player p, BinaryWriter w) {}
+
+		protected virtual void OnPlayerDisconnected(Player p,ClientMessage reason) {
+			using (var ms = new MemoryStream())
+				using (var w = new BinaryWriter(ms)) {
+				w.Write ((byte)ClientMessage.OtherPlayerLeft);
+				w.Write (p.Nick);
+
+				SendToAllPlayers (ms.ToArray ());
+			}
+		}
+		protected virtual void OnComposePlayerInfo(Player p, BinaryWriter w) {}
 		/// <summary>
 		/// Possibility to pass additional general (can seen by all players!) data.
 		/// </summary>
-		protected virtual void OnGetPlayerGeneralInfo(Player p, BinaryWriter w) {}
+		protected virtual void OnComposeGeneralPlayerInfo(Player p, BinaryWriter w) {}
 
 		public bool DisconnectPlayer(BinaryWriter w,long id, ClientMessage reason = ClientMessage.Disconnected, string message = null, IPEndPoint ep = null)
 		{
@@ -320,6 +357,29 @@ namespace Uno.Game
 				return currentNick;
 			}
 		}
+
+		protected void DistributePlayerUpdate(long id)
+		{
+			var p = GetPlayer (id);
+			if (p == null)
+				throw new InvalidDataException ("id");
+
+			DistributePlayerUpdate (p);
+		}
+
+		protected void DistributePlayerUpdate(Player p)
+		{
+			using (var ms = new MemoryStream())
+				using (var w = new BinaryWriter(ms)) {
+				w.Write ((byte)ClientMessage.GeneralPlayersInfo);
+				w.Write ((byte)1);
+
+				w.Write (p.Nick);
+				w.Write (p.ReadyToPlay);
+				OnComposeGeneralPlayerInfo (p, w);
+				SendToAllPlayers (ms.ToArray ());
+			}
+		}
 		#endregion
 
 		#region Game generics
@@ -327,28 +387,40 @@ namespace Uno.Game
 
 		protected void SendGameDataToPlayer(Player p, byte[] data)
 		{
-			using (var ms = new MemoryStream ())
-				using (var w = new BinaryWriter(ms)) {
-				w.Write (p.Id);
-				w.Write ((byte)ClientMessage.GameData);
-				w.Write (data);
-				Send (ms, p.Address);
-			}
+			var actData = new byte[data.Length + sizeof(long) + 1];
+
+			BitConverter.GetBytes (p.Id).CopyTo (actData, 0);
+			actData [sizeof(long)] = (byte)ClientMessage.GameData;
+			data.CopyTo (actData, sizeof(long) + 1);
+
+			Send (actData, p.Address);
+		}
+
+		protected void SendToAllPlayers(byte[] data)
+		{
+			var actData = new byte[data.Length + sizeof(long)];
+
+			data.CopyTo (actData, sizeof(long));
+
+			lock (players)
+				foreach (var p in players) {
+					BitConverter.GetBytes (p.Id).CopyTo (actData, 0);
+					Send (actData, p.Address);
+				}
 		}
 
 		protected void SendGameDataToAllPlayers(byte[] data)
 		{
-			using (var ms = new MemoryStream ())
-			using (var w = new BinaryWriter(ms)) {
-				lock (players)
-					foreach (var p in players) {
-						w.Write (p.Id);
-						w.Write ((byte)ClientMessage.GameData);
-						w.Write (data);
-						Send (ms, p.Address);
-						ms.SetLength (0);
-					}
-			}
+			var actData = new byte[data.Length + sizeof(long) + 1];
+
+			actData [sizeof(long)] = (byte)ClientMessage.GameData;
+			data.CopyTo (actData, sizeof(long) + 1);
+
+			lock (players)
+				foreach (var p in players) {
+					BitConverter.GetBytes (p.Id).CopyTo (actData, 0);
+					Send (actData, p.Address);
+				}
 		}
 		#endregion
 	}
