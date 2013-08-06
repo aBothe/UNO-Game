@@ -71,7 +71,7 @@ namespace Uno
 
 		protected override Player CreatePlayer (string nick)
 		{
-			throw new NotImplementedException ();
+			return new UnoPlayer (this, nick); 
 		}
 
 		public UnoHost ()

@@ -92,6 +92,7 @@
 			this.list_Servers.Name = "list_Servers";
 			this.list_Servers.Size = new System.Drawing.Size(305, 223);
 			this.list_Servers.TabIndex = 1;
+			this.list_Servers.SelectedIndexChanged += list_Servers_Select;
 			// 
 			// text_Nick
 			// 

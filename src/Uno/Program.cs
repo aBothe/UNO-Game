@@ -6,6 +6,8 @@ namespace Uno
 {
     static class Program
     {
+		public static Form MainForm { get; private set; }
+
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
@@ -14,7 +16,7 @@ namespace Uno
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Games.ServerListe());
+            Application.Run(MainForm = new Games.ServerListe());
         }
     }
 }

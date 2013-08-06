@@ -48,11 +48,10 @@ namespace Uno.Game
 			}
 		}
 
-		public Player (GameHost host, string nick, long id)
+		public Player (GameHost host, string nick)
 		{
 			Nick = nick;
 			Host = host;
-			Id = id;
 
 			host.GameStateChanged += OnGameStateChanged;
 		}

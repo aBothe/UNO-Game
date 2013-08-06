@@ -44,39 +44,38 @@ namespace Uno.Game
 		public delegate void DisconnectedHandler(ClientMessage msg, string reason);
 		public event DisconnectedHandler Disconnected;
 
-		public delegate void ChatHandler(string nick, string message);
+		public delegate void ChatHandler (string nick, string message);
+
 		public event ChatHandler ChatArrived;
-
 		public event Action<bool> ReadyStateChanged;
-
 		public event Action<string> OtherPlayerLeft;
+
+		public delegate void GeneralPlayerInfoHandler (string nick, bool isReady, object furtherInfo);
+		public event GeneralPlayerInfoHandler GeneralPlayerInfoReceived;
 		#endregion
 
 		#region Init / Constructor
-		public static GameConnection TryEstablishConnection(IPEndPoint ip, long hostId, string nick, 
-		                                                    GameHostFactory fact, 
-		                                                    ConnectedHandler onconnected=null,
-		                                                    DisconnectedHandler ondisconnected = null)
+		/// <summary>
+		/// Initialize() must be called after overloading first events!
+		/// </summary>
+		/// <param name="ip">Ip.</param>
+		/// <param name="hostId">Host identifier.</param>
+		/// <param name="fact">Fact.</param>
+		public static GameConnection Create(IPEndPoint ip, long hostId, 
+		                                                    GameHostFactory fact)
 		{
 			var conn = fact.CreateConnection();
 
-			if(onconnected != null)
-				conn.Connected += onconnected;
-			if (ondisconnected != null)
-				conn.Disconnected += ondisconnected;
-
 			conn.HostId = hostId;
-			conn.Init (ip, nick);
+			conn.HostAddress = ip;
 
 			return conn;
 		}
 
 		protected GameConnection() : base(ServerToClientCommunicationPort) {}
 
-		protected virtual void Init(IPEndPoint hostAddress, string nick)
+		public virtual void Initialize(string nick)
 		{
-			HostAddress = hostAddress;
-
 			// Acquire approval from host
 			SendConnectionRequest (nick);
 		}
@@ -197,7 +196,20 @@ namespace Uno.Game
 			}
 		}
 
-		protected virtual void OnGeneralPlayerInfoReceived(string nick, bool isReady, BinaryReader r) {}
+		protected void FireGeneralPlayerInfoReceivedEvent(string nick, bool isReady, object furtherInfo = null)
+		{
+			if (GeneralPlayerInfoReceived != null)
+				GeneralPlayerInfoReceived (nick, isReady, furtherInfo);
+		}
+
+		/// <summary>
+		/// Raises the general player info received event.
+		/// Override implementations may not call the first base implementation 
+		/// if FireGeneralPlayerInfoReceivedEvent() has already been called!
+		/// </summary>
+		protected virtual void OnGeneralPlayerInfoReceived(string nick, bool isReady, BinaryReader r) {
+			FireGeneralPlayerInfoReceivedEvent (nick, isReady, null);
+		}
 
 		public void AcquireGeneralPlayerInfo()
 		{
@@ -231,6 +243,7 @@ namespace Uno.Game
 			using (var w = new BinaryWriter (ms)) {
 				w.Write (HostId);
 				w.Write ((byte)HostMessage.ChatMessage);
+				w.Write (PlayerId);
 				w.Write (message);
 
 				Send (ms, HostAddress);

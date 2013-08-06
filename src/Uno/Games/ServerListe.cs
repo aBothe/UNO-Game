@@ -34,7 +34,7 @@ namespace Uno.Games
 		{
 			get
 			{
-				return CanCreateGame && list_Servers.SelectedItem != null;
+				return CanCreateGame && list_Servers.SelectedIndex >= 0;
 			}
 		}
 		#endregion
@@ -89,11 +89,7 @@ namespace Uno.Games
 
 			var lobby = Lobby.TryJoinGame(gho.Address, gho.HostId, NickName, UnoHostFactory.Instance);
 
-			if (lobby != null)
-			{
-				lobby.FormClosed += lobby_FormClosed;
-				Hide();
-			}
+			lobby_PostCreation (ref lobby);
 		}
 
 		void lobby_FormClosed(object sender, FormClosedEventArgs e)
@@ -101,6 +97,26 @@ namespace Uno.Games
 			Show();
 			RefreshServerList();
 			UpdateButtonStates();
+		}
+
+		void lobby_PostCreation(ref Lobby lobby)
+		{
+			if (lobby != null)
+			{
+				if (!lobby.ConnectedEvent.WaitOne (5000)) {
+
+					// Just in case it couldn't connect to the own server, shut it down for consistency reasons
+					GameHost.ShutDown ();
+
+					MessageBox.Show ("Couldn't connect to server!", "Connection timeout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					lobby.Close ();
+					lobby.Dispose ();
+					return;
+				}
+
+				lobby.FormClosed += lobby_FormClosed;
+				Hide();
+			}
 		}
 
 		private void Click_CreateGame (object sender, EventArgs e)
@@ -114,11 +130,7 @@ namespace Uno.Games
 			//TODO: Auswahl an verfügbaren Game-Hosts erschaffen
 			var lobby = Lobby.CreateNewGame(NickName, UnoHostFactory.Instance);
 
-			if (lobby != null)
-			{
-				lobby.FormClosed += lobby_FormClosed;
-				Hide();
-			}
+			lobby_PostCreation (ref lobby);
 		}
 
 		private void Click_Refresh(object sender, EventArgs e)
@@ -135,6 +147,10 @@ namespace Uno.Games
 		{
 			text_Nick.BackColor = CanCreateGame ? Color.White : Color.Red;
 			UpdateButtonStates();
+		}
+
+		void list_Servers_Select(object sender, EventArgs e){
+			UpdateButtonStates ();
 		}
 
 		public void RefreshServerList()

@@ -32,7 +32,7 @@
 			System.Windows.Forms.Label label2;
 			this.button_StartGame = new System.Windows.Forms.Button();
 			this.button_Ready = new System.Windows.Forms.Button();
-			this.list_Players = new System.Windows.Forms.ListView();
+			this.list_Players = new System.Windows.Forms.ListBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.text_ChatLog = new System.Windows.Forms.TextBox();
 			this.text_ChatMessage = new System.Windows.Forms.TextBox();
@@ -74,7 +74,8 @@
 			this.list_Players.Name = "list_Players";
 			this.list_Players.Size = new System.Drawing.Size(191, 168);
 			this.list_Players.TabIndex = 2;
-			this.list_Players.UseCompatibleStateImageBehavior = false;
+			this.list_Players.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.list_Players.DrawItem += DrawPlayerItem;
 			// 
 			// label1
 			// 
@@ -131,6 +132,7 @@
 			this.text_ChatMessage.Name = "text_ChatMessage";
 			this.text_ChatMessage.Size = new System.Drawing.Size(211, 20);
 			this.text_ChatMessage.TabIndex = 1;
+			this.text_ChatMessage.KeyDown += text_ChatMessage_KeyDown;
 			// 
 			// button_SendChat
 			// 
@@ -141,6 +143,7 @@
 			this.button_SendChat.TabIndex = 6;
 			this.button_SendChat.Text = "Say";
 			this.button_SendChat.UseVisualStyleBackColor = true;
+			this.button_SendChat.Click += button_SendChat_Click;
 			// 
 			// button_ReturnToLobby
 			// 
@@ -200,7 +203,7 @@
 
 		private System.Windows.Forms.Button button_StartGame;
 		private System.Windows.Forms.Button button_Ready;
-		private System.Windows.Forms.ListView list_Players;
+		private System.Windows.Forms.ListBox list_Players;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.TextBox text_ChatMessage;
 		private System.Windows.Forms.TextBox text_ChatLog;

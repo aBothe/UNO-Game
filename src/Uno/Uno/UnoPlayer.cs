@@ -35,8 +35,8 @@ namespace Uno
 
 		readonly List<Card> CardDeck = new List<Card>();
 
-		public UnoPlayer (UnoHost host, string nick, long id)
-			: base(host, nick, id)
+		public UnoPlayer (UnoHost host, string nick)
+			: base(host, nick)
 		{
 		}
 

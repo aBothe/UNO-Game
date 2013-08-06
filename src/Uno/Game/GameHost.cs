@@ -299,7 +299,9 @@ namespace Uno.Game
 		#region Player
 		protected abstract Player CreatePlayer(string nick);
 
-		protected virtual void OnPlayerAdded(Player player)	{}
+		protected virtual void OnPlayerAdded(Player player)	{
+			DistributePlayerUpdate (player);
+		}
 		protected virtual void OnPlayerDisconnecting(Player p,ClientMessage reason) {}
 
 		protected virtual void OnPlayerDisconnected(Player p,ClientMessage reason) {
