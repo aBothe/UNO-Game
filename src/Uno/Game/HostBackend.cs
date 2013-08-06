@@ -104,6 +104,9 @@ namespace Uno.Game
 
 		void listenerTh()
 		{
+			while (!udp.Client.IsBound)
+				Thread.Sleep(250);
+
 			while(udp.Client != null && dataReceivedEvt.WaitOne(0))
 			{
 				byte[] data = null;

@@ -16,6 +16,7 @@ namespace Uno.Game
 		GameConnection Connection;
 		public readonly ManualResetEvent ConnectedEvent = new ManualResetEvent (false);
 		static bool IsAdmin { get { return GameHost.IsHosting; } }
+		bool closed;
 
 		#endregion
 
@@ -97,7 +98,8 @@ namespace Uno.Game
 			Connection.Dispose ();
 			Connection = null;
 
-			Invoke(new MethodInvoker(Close));
+			if(!closed)
+				Invoke(new MethodInvoker(Close));
 
 			string title;
 			switch (reason) {
@@ -162,24 +164,24 @@ namespace Uno.Game
 
 		void PlayerInfoReceived(string nick, bool isReady, object furtherInfo)
 		{
-			var pi = new PlayerInfo { nick = nick, isReady = isReady };
-
-			lock (list_Players.Items) {
-				var i = list_Players.Items.IndexOf (pi);
+			Program.MainForm.BeginInvoke(new MethodInvoker(() =>
+			{
+				var pi = new PlayerInfo { nick = nick, isReady = isReady };
+				var i = list_Players.Items.IndexOf(pi);
 
 				if (i < 0)
-					list_Players.Items.Add (pi);
-				else {
-					list_Players.Items.RemoveAt (i);
-					list_Players.Items.Insert (i, pi);
+					list_Players.Items.Add(pi);
+				else
+				{
+					list_Players.Items.RemoveAt(i);
+					list_Players.Items.Insert(i, pi);
 				}
-			}
+			}));
 		}
 
 		void OtherPlayerLeft(string nick)
 		{
-			var ti = new PlayerInfo { nick = nick };
-			list_Players.Items.Remove (ti);
+			Program.MainForm.BeginInvoke(new MethodInvoker(() => list_Players.Items.Remove(new PlayerInfo { nick = nick })));
 		}
 
 		void ChatMessageReceived(string nick, string message)
@@ -214,12 +216,12 @@ namespace Uno.Game
 
 		void GameReadyStateChanged(bool ready)
 		{
-			button_StartGame.Enabled = ready;
+			BeginInvoke(new MethodInvoker(() => button_StartGame.Enabled = ready));
 		}
 
 		void ReadyStateChanged(bool ready)
 		{
-			button_Ready.Checked = ready;
+			BeginInvoke(new MethodInvoker(() => button_Ready.Enabled = ready));
 		}
 
 		private void button_Ready_Click(object sender, EventArgs e)
@@ -249,6 +251,7 @@ namespace Uno.Game
 		private void button_ReturnToLobby_Click(object sender, EventArgs e)
 		{
 			Connection.Disconnect ();
+			closed = true;
 			Close();
 		}
 		#endregion

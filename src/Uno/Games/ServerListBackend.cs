@@ -55,6 +55,7 @@ namespace Uno.Games
 			GameHost.AnyGameStateChanged += ThisHostStateChanged;
 			udp = new UdpClient ();
 			udp.ExclusiveAddressUse = false;
+			udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 			udp.JoinMulticastGroup (multicastaddress);
 
 			udp.Client.Bind (new IPEndPoint(IPAddress.Any,MetaCommunicationPort));
