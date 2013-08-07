@@ -34,7 +34,11 @@ namespace Uno
 	{
 		#region Properties
 		public readonly CardDeck AvailableCards = new CardDeck ();
-		public long CurrentPlayer;
+		public long NextPlayerId;
+		public UnoPlayer NexPlayer { 
+			get { return GetPlayer(NextPlayerId) as UnoPlayer; }
+			set { NextPlayerId = value != null ? value.Id : 0; }
+		}
 		public readonly Stack<Card> CardStack = new Stack<Card>();
 		public bool ClockwiseDirection;
 		public CardColor CurrentColor;
@@ -80,8 +84,9 @@ namespace Uno
 
 		#region Card logic
 
-		public bool TryPutOnStack(UnoPlayer p, Card c)
+		public bool TryPutOnStack(UnoPlayer p, Card c, CardColor colorSelection, out string errorMsg)
 		{
+			errorMsg = null;
 			// Ist Karte kompatibel zu zuletzt auf den Stack gelegter Karte?
 
 			// Karte darauflegen, Karte von Hand des Spielers p entfernen - Spieler über neue Kartenkonstellation informieren
@@ -94,7 +99,7 @@ namespace Uno
 		/// <summary>
 		/// Wenn der Spieler keinen anderen Zug machen kann/will(!!), werden dem Spieler hier Strafkarten angerechnet.
 		/// </summary>
-		public void PerformCardDrawAction(UnoPlayer p)
+		public void DrawCard(UnoPlayer p)
 		{
 
 		}
@@ -111,6 +116,8 @@ namespace Uno
 		{
 			(p as UnoPlayer).ReleaseHand();
 
+			// Wenn p als nächster Spieler angedacht war, neuen Nachfolger bestimmen!
+
 			base.OnPlayerDisconnected(p, reason);
 		}
 
@@ -121,6 +128,10 @@ namespace Uno
 			{
 				p.ResetCardDeck();
 			}
+
+			// Andere Zustände initialisieren
+
+			// Dem nächsten Player signalisieren, dass er/sie dran ist
 
 			return true;
 		}
@@ -144,6 +155,48 @@ namespace Uno
 			var unop = p as UnoPlayer;
 
 			w.Write((byte)unop.CardCount);
+		}
+
+		protected override void OnGameDataReceived(Player playerOpt, BinaryReader r, BinaryWriter w)
+		{
+			if (playerOpt == null)
+			{
+				w.Write((byte)UnoMessage.ActionNotAllowed);
+				w.Write("Invalid player!");
+				return;
+			}
+			
+			var message = (UnoMessage)r.ReadByte();
+
+			switch (message)
+			{
+				case UnoMessage.DrawCardFromStack:
+					DrawCard(playerOpt as UnoPlayer);
+					break;
+				case UnoMessage.PressUno:
+
+					break;
+				case UnoMessage.PutCard:
+
+					var c = Card.FromHash(r.ReadUInt16());
+					CardColor col;
+
+					if (c.Color != CardColor.Black)
+						col = c.Color;
+					else
+						col = (CardColor)r.ReadByte();
+
+					string errorMsg;
+					if (!TryPutOnStack(playerOpt as UnoPlayer, c, col, out errorMsg))
+					{
+						w.Write((byte)UnoMessage.ActionNotAllowed);
+						w.Write(errorMsg);
+					}
+					break;
+				case UnoMessage.SkipRound:
+
+					break;
+			}
 		}
 	}
 }

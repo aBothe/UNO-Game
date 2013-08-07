@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using Uno.Game;
 
 namespace Uno
@@ -46,16 +47,6 @@ namespace Uno
 		public override void Initialize(string nick)
 		{
 			base.Initialize(nick);
-		}
-
-		protected override void OnComposePlayerInfo(BinaryWriter w)
-		{
-			base.OnComposePlayerInfo(w);
-		}
-
-		protected override void OnGameDataReceived(BinaryReader r)
-		{
-			base.OnGameDataReceived(r);
 		}
 
 		protected override void OnGameFinished(bool aborted)
@@ -96,6 +87,11 @@ namespace Uno
 				RecommendedCards.Add(Card.FromHash(r.ReadUInt16()));
 
 			base.OnPlayerInfoReceived(r);
+		}
+
+		protected override void OnGameDataReceived(BinaryReader r)
+		{
+			var message = (UnoMessage)r.ReadByte();
 		}
 	}
 }

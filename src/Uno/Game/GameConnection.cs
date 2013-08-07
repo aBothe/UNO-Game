@@ -219,7 +219,6 @@ namespace Uno.Game
 
 		protected virtual void OnPlayerInfoReceived(BinaryReader r) { }
 		protected virtual void OnOtherPlayerLeft(string nick) { }
-		protected virtual void OnComposePlayerInfo(BinaryWriter w) {}
 
 		public void AcquirePlayerInfo()
 		{
@@ -292,5 +291,24 @@ namespace Uno.Game
 		protected virtual void OnGameDataReceived(BinaryReader r) {}
 		protected virtual void OnGameStarted() {}
 		protected virtual void OnGameFinished(bool aborted) {}
+
+		public void SendGameData(MemoryStream ms)
+		{
+			SendGameData(ms.ToArray());
+		}
+
+		public void SendGameData(byte[] data)
+		{
+			using (var ms = new MemoryStream())
+			using (var w = new BinaryWriter(ms))
+			{
+				w.Write(HostId);
+				w.Write((byte)HostMessage.GameData);
+				w.Write(PlayerId);
+				w.Write(data);
+
+				Send(ms, HostAddress);
+			}
+		}
 	}
 }
