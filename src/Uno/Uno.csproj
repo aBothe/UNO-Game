@@ -76,6 +76,7 @@
     </Compile>
     <Compile Include="Uno\UnoHost.cs" />
     <Compile Include="Uno\UnoHostFactory.cs" />
+    <Compile Include="Uno\UnoMessage.cs" />
     <Compile Include="Uno\UnoPlayer.cs" />
     <Compile Include="Game\GameHost.cs" />
     <Compile Include="Game\Player.cs" />
