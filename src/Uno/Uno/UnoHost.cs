@@ -83,20 +83,5 @@ namespace Uno
 			return true;
 		}
 	}
-
-	public class UnoHostFactory : Game.GameHostFactory
-	{
-		public readonly static UnoHostFactory Instance = new UnoHostFactory();
-
-		public GameHost Create ()
-		{
-			return new UnoHost ();
-		}
-
-		public GameConnection CreateConnection()
-		{
-			return new UnoGameConnection ();
-		}
-	}
 }
 
