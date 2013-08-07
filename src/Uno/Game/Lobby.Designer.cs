@@ -185,8 +185,10 @@
 			this.Controls.Add(label1);
 			this.Controls.Add(this.button_Ready);
 			this.Controls.Add(this.list_Players);
+			this.DoubleBuffered = true;
 			this.MinimumSize = new System.Drawing.Size(500, 400);
 			this.Name = "Lobby";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Game Lobby";
 			this.Load += new System.EventHandler(this.Lobby_Load);
 			this.panel1.ResumeLayout(false);

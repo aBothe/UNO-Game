@@ -108,6 +108,7 @@
 			// button_Refresh
 			// 
 			this.button_Refresh.Location = new System.Drawing.Point(44, 294);
+			this.button_Refresh.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.button_Refresh.Name = "button_Refresh";
 			this.button_Refresh.Size = new System.Drawing.Size(75, 23);
 			this.button_Refresh.TabIndex = 5;
