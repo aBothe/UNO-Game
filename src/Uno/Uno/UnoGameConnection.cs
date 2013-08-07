@@ -33,6 +33,41 @@ namespace Uno
 		public UnoGameConnection ()
 		{
 		}
+
+		public override void Initialize(string nick)
+		{
+			base.Initialize(nick);
+		}
+
+		protected override void OnComposePlayerInfo(System.IO.BinaryWriter w)
+		{
+			base.OnComposePlayerInfo(w);
+		}
+
+		protected override void OnGameDataReceived(System.IO.BinaryReader r)
+		{
+			base.OnGameDataReceived(r);
+		}
+
+		protected override void OnGameFinished(bool aborted)
+		{
+			base.OnGameFinished(aborted);
+		}
+
+		protected override void OnGameStarted()
+		{
+			base.OnGameStarted();
+		}
+
+		protected override void OnGeneralPlayerInfoReceived(string nick, bool isReady, System.IO.BinaryReader r)
+		{
+			base.OnGeneralPlayerInfoReceived(nick, isReady, r);
+		}
+
+		protected override void OnPlayerInfoReceived(System.IO.BinaryReader r)
+		{
+			base.OnPlayerInfoReceived(r);
+		}
 	}
 }
 

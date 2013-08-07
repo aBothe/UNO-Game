@@ -33,7 +33,7 @@ namespace Uno
 	{
 		public new UnoHost Host {get {return base.Host as UnoHost; }}
 
-		readonly List<Card> CardDeck = new List<Card>();
+		readonly List<Card> Hand = new List<Card>();
 
 		public UnoPlayer (UnoHost host, string nick)
 			: base(host, nick)
@@ -42,21 +42,21 @@ namespace Uno
 
 		public void ResetCardDeck()
 		{
-			CardDeck.Clear ();
-			this.CardDeck.AddRange(Host.AvailableCards.GiveFirstHand ());
+			Hand.Clear ();
+			this.Hand.AddRange(Host.AvailableCards.GiveFirstHand ());
 		}
 
 		public bool RemoveCard(Card c)
 		{
-			return CardDeck.Remove (c);
+			return Hand.Remove (c);
 		}
 
 		public bool PutCard(Card c)
 		{
-			if (CardDeck.Contains (c))
+			if (Hand.Contains (c))
 				return false;
 
-			CardDeck.Add (c);
+			Hand.Add (c);
 			return true;
 		}
 	}
