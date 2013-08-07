@@ -80,15 +80,23 @@ namespace Uno
 
 		#region Card logic
 
-		public bool TryPutOnStack(Card c)
+		public bool TryPutOnStack(UnoPlayer p, Card c)
 		{
 			// Ist Karte kompatibel zu zuletzt auf den Stack gelegter Karte?
 
-			// Karte darauflegen
+			// Karte darauflegen, Karte von Hand des Spielers p entfernen - Spieler über neue Kartenkonstellation informieren
 
 			// Strafwerte/Zustände anpassen, nächsten Spieler bestimmen, Gewinn feststellen, Gewinner/Verlierer benachrichtigen
 
 			return true;
+		}
+
+		/// <summary>
+		/// Wenn der Spieler keinen anderen Zug machen kann/will(!!), werden dem Spieler hier Strafkarten angerechnet.
+		/// </summary>
+		public void PerformCardDrawAction(UnoPlayer p)
+		{
+
 		}
 
 		#endregion
