@@ -47,19 +47,33 @@ namespace Uno.Game
 			// If connect happened successfully and connection is established, show lobby
 			// -- Always expect to be kicked/disconnected for no obvious reasons!
 			var con = GameConnection.Create (ip, hostId, ghf);
-
-			con.Connected += lobby.Connected;
-			con.Disconnected += lobby.Disconnected;
-			con.GeneralPlayerInfoReceived += lobby.PlayerInfoReceived;
-			con.OtherPlayerLeft += lobby.OtherPlayerLeft;
-			con.ChatArrived += lobby.ChatMessageReceived;
-			con.ReadyStateChanged += lobby.ReadyStateChanged;
-
 			lobby.Connection = con;
-
+			lobby.Init();
 			con.Initialize (nickName);
 
 			return lobby;
+		}
+
+		void Init()
+		{
+			Connection.Connected += Connected;
+			Connection.Disconnected += Disconnected;
+			Connection.GeneralPlayerInfoReceived += PlayerInfoReceived;
+			Connection.OtherPlayerLeft += OtherPlayerLeft;
+			Connection.ChatArrived += ChatMessageReceived;
+			Connection.ReadyStateChanged += ReadyStateChanged;
+			Connection.GameStarted += Connection_GameStarted;
+			Connection.GameFinished += Connection_GameFinished;
+		}
+
+		void Connection_GameFinished(bool obj)
+		{
+			Show();
+		}
+
+		void Connection_GameStarted()
+		{
+			Hide();
 		}
 
 		Lobby()
