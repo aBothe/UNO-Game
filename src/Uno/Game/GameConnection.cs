@@ -157,9 +157,12 @@ namespace Uno.Game
 					break;
 
 				case ClientMessage.OtherPlayerLeft:
-					if (OtherPlayerLeft != null) {
-						OtherPlayerLeft (r.ReadString ());
-					}
+					PlayerNick = r.ReadString();
+
+					OnOtherPlayerLeft(PlayerNick);
+
+					if (OtherPlayerLeft != null)
+						OtherPlayerLeft (PlayerNick);
 					break;
 
 				case ClientMessage.IsReady:
@@ -214,7 +217,8 @@ namespace Uno.Game
 
 		#region Player
 
-		protected virtual void OnPlayerInfoReceived(BinaryReader r) {}
+		protected virtual void OnPlayerInfoReceived(BinaryReader r) { }
+		protected virtual void OnOtherPlayerLeft(string nick) { }
 		protected virtual void OnComposePlayerInfo(BinaryWriter w) {}
 
 		public void AcquirePlayerInfo()

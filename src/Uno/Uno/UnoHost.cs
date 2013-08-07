@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Uno.Game;
 
 namespace Uno
@@ -32,7 +34,14 @@ namespace Uno
 	{
 		#region Properties
 		public readonly CardDeck AvailableCards = new CardDeck ();
+		public long CurrentPlayer;
+		public readonly Stack<Card> CardStack = new Stack<Card>();
+		public bool ClockwiseDirection;
+		public CardColor CurrentColor;
+		public int CardsToDraw;
+		public int PlayerRoundsToSkip;
 
+		#region LowLevel
 		public override string GameTitle {
 			get {
 				return "Uno";
@@ -67,20 +76,66 @@ namespace Uno
 			}
 		}
 		#endregion
-            
+		#endregion
+
+		#region Card logic
+
+		public bool TryPutOnStack(Card c)
+		{
+			// Ist Karte kompatibel zu zuletzt auf den Stack gelegter Karte?
+
+			// Karte darauflegen
+
+			// Strafwerte/Zustände anpassen, nächsten Spieler bestimmen, Gewinn feststellen, Gewinner/Verlierer benachrichtigen
+
+			return true;
+		}
+
+		#endregion
+
 
 		protected override Player CreatePlayer (string nick)
 		{
 			return new UnoPlayer (this, nick); 
 		}
 
-		public UnoHost ()
+		protected override void OnPlayerDisconnected(Player p, ClientMessage reason)
 		{
+			(p as UnoPlayer).ReleaseHand();
+
+			base.OnPlayerDisconnected(p, reason);
 		}
 
 		protected override bool StartGameInternal ()
 		{
+			AvailableCards.Reset();
+			foreach (UnoPlayer p in Players)
+			{
+				p.ResetCardDeck();
+			}
+
 			return true;
+		}
+
+		protected override void OnComposePlayerInfo(Player p, BinaryWriter w)
+		{
+			var unop = p as UnoPlayer;
+
+			w.Write((byte)unop.CardCount);
+
+			foreach (var c in unop.Cards)
+				w.Write(c.ToHash());
+			
+			base.OnComposePlayerInfo(p, w);
+		}
+
+		protected override void OnComposeGeneralPlayerInfo(Player p, BinaryWriter w)
+		{
+			base.OnComposeGeneralPlayerInfo(p, w);
+
+			var unop = p as UnoPlayer;
+
+			w.Write((byte)unop.CardCount);
 		}
 	}
 }

@@ -35,9 +35,20 @@ namespace Uno
 
 		readonly List<Card> Hand = new List<Card>();
 
+		public int CardCount { get { return Hand.Count; } }
+
+		public IEnumerable<Card> Cards
+		{ get { return Hand; } }
+
 		public UnoPlayer (UnoHost host, string nick)
 			: base(host, nick)
 		{
+		}
+
+		public void ReleaseHand()
+		{
+			Host.AvailableCards.Put(Hand);
+			Hand.Clear();
 		}
 
 		public void ResetCardDeck()

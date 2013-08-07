@@ -29,7 +29,7 @@ using System.Drawing.Drawing2D;
 
 namespace Uno
 {
-	public class Card
+	public struct Card
 	{
 		public readonly CardColor Color;
 		public readonly CardCaption Caption;
@@ -50,9 +50,14 @@ namespace Uno
 			return new Card((CardColor)(hash >> 8), (CardCaption)hash);
 		}
 
+		public override int GetHashCode()
+		{
+			return (int)ToHash();
+		}
+		
 		public override bool Equals (object obj)
 		{
-			return obj is Card && (obj as Card).ToHash () == ToHash ();
+			return obj is Card && ((Card)obj).ToHash () == ToHash ();
 		}
 
         public Bitmap getImage()

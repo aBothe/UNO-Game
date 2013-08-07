@@ -24,12 +24,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Uno.Game;
 
 namespace Uno
 {
 	public class UnoGameConnection : GameConnection
 	{
+		public readonly Dictionary<string, int> OtherPlayersHandSize = new Dictionary<string, int>();
+		public readonly List<Card> OwnHand = new List<Card>();
+		/// <summary>
+		/// Card candidates that can be used to put on the deck.
+		/// </summary>
+		public readonly List<Card> RecommendedCards = new List<Card>();
+
 		public UnoGameConnection ()
 		{
 		}
@@ -39,12 +48,12 @@ namespace Uno
 			base.Initialize(nick);
 		}
 
-		protected override void OnComposePlayerInfo(System.IO.BinaryWriter w)
+		protected override void OnComposePlayerInfo(BinaryWriter w)
 		{
 			base.OnComposePlayerInfo(w);
 		}
 
-		protected override void OnGameDataReceived(System.IO.BinaryReader r)
+		protected override void OnGameDataReceived(BinaryReader r)
 		{
 			base.OnGameDataReceived(r);
 		}
@@ -59,13 +68,33 @@ namespace Uno
 			base.OnGameStarted();
 		}
 
-		protected override void OnGeneralPlayerInfoReceived(string nick, bool isReady, System.IO.BinaryReader r)
+		protected override void OnOtherPlayerLeft(string nick)
 		{
-			base.OnGeneralPlayerInfoReceived(nick, isReady, r);
+			OtherPlayersHandSize.Remove(nick);
+
+			base.OnOtherPlayerLeft(nick);
 		}
 
-		protected override void OnPlayerInfoReceived(System.IO.BinaryReader r)
+		protected override void OnGeneralPlayerInfoReceived(string nick, bool isReady, BinaryReader r)
 		{
+			base.OnGeneralPlayerInfoReceived(nick, isReady, r);
+
+			OtherPlayersHandSize[nick] = (int)r.ReadByte();
+		}
+
+		protected override void OnPlayerInfoReceived(BinaryReader r)
+		{
+			OwnHand.Clear();
+			RecommendedCards.Clear();
+
+			var num = (int)r.ReadByte();
+			while (num-- != 0)
+				OwnHand.Add(Card.FromHash(r.ReadUInt16()));
+
+			num = (int)r.ReadByte();
+			while (num-- != 0)
+				RecommendedCards.Add(Card.FromHash(r.ReadUInt16()));
+
 			base.OnPlayerInfoReceived(r);
 		}
 	}
