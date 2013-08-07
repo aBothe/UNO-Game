@@ -99,9 +99,22 @@ namespace Uno
 		/// <summary>
 		/// Wenn der Spieler keinen anderen Zug machen kann/will(!!), werden dem Spieler hier Strafkarten angerechnet.
 		/// </summary>
-		public void DrawCard(UnoPlayer p)
+		public bool DrawCard(UnoPlayer p)
 		{
+			return true;
+		}
 
+		public bool PressUnoButton(UnoPlayer p)
+		{
+			// Prüfen, ob Uno-Button gedrückt werden kann
+
+			p.PressedUnoButton = true;
+			return true;
+		}
+
+		public bool SkipRound(UnoPlayer p)
+		{
+			return true;
 		}
 
 		#endregion
@@ -159,43 +172,47 @@ namespace Uno
 
 		protected override void OnGameDataReceived(Player playerOpt, BinaryReader r, BinaryWriter w)
 		{
+			string errorMsg = null;
+
 			if (playerOpt == null)
+				errorMsg = "Invalid player!";
+			else
+			{
+				var message = (UnoMessage)r.ReadByte();
+
+				switch (message)
+				{
+					case UnoMessage.DrawCardFromStack:
+						if (!DrawCard(playerOpt as UnoPlayer))
+							errorMsg = "Can't draw card!";
+						break;
+					case UnoMessage.PressUno:
+						if (!PressUnoButton(playerOpt as UnoPlayer))
+							errorMsg = "Can't press UNO button";
+						break;
+					case UnoMessage.PutCard:
+
+						var c = Card.FromHash(r.ReadUInt16());
+						CardColor col;
+
+						if (c.Color != CardColor.Black)
+							col = c.Color;
+						else
+							col = (CardColor)r.ReadByte();
+
+						TryPutOnStack(playerOpt as UnoPlayer, c, col, out errorMsg);
+						break;
+					case UnoMessage.SkipRound:
+						if (!SkipRound(playerOpt as UnoPlayer))
+							errorMsg = "Can't skip round!";
+						break;
+				}
+			}
+
+			if (errorMsg != null)
 			{
 				w.Write((byte)UnoMessage.ActionNotAllowed);
-				w.Write("Invalid player!");
-				return;
-			}
-			
-			var message = (UnoMessage)r.ReadByte();
-
-			switch (message)
-			{
-				case UnoMessage.DrawCardFromStack:
-					DrawCard(playerOpt as UnoPlayer);
-					break;
-				case UnoMessage.PressUno:
-
-					break;
-				case UnoMessage.PutCard:
-
-					var c = Card.FromHash(r.ReadUInt16());
-					CardColor col;
-
-					if (c.Color != CardColor.Black)
-						col = c.Color;
-					else
-						col = (CardColor)r.ReadByte();
-
-					string errorMsg;
-					if (!TryPutOnStack(playerOpt as UnoPlayer, c, col, out errorMsg))
-					{
-						w.Write((byte)UnoMessage.ActionNotAllowed);
-						w.Write(errorMsg);
-					}
-					break;
-				case UnoMessage.SkipRound:
-
-					break;
+				w.Write(errorMsg);
 			}
 		}
 	}
