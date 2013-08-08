@@ -83,7 +83,21 @@ namespace Uno
 		#endregion
 
 		#region Card logic
-
+        public bool IsMyHandCompatibelToStack(UnoPlayer p)
+        {
+            foreach (var card in p.Cards)
+            { 
+                Card LastCardOnStack = CardStack.Peek();
+                if (card.Caption != LastCardOnStack.Caption || card.Color != LastCardOnStack.Color)
+                {
+                    DrawCard(p);
+                    return false;
+                }
+                else
+                    return true;
+            }
+            return false;
+        }
 		public bool TryPutOnStack(UnoPlayer p, Card c, CardColor colorSelection, out string errorMsg)
 		{
 			errorMsg = null;
@@ -95,14 +109,16 @@ namespace Uno
             }
             else
             {
-                if (p.CardCount == 0 && p.PressedUnoButton)
-                {
-                    // Spieler hat gewonnenn !
-                }
-                
 
                 p.RemoveCard(c);
                 CardStack.Push(c);
+
+
+                if (p.CardCount == 0 && p.PressedUnoButton)
+                {
+                    // Spieler hat gewonnen !
+                }
+                
                 return true;
             }
 			// Karte darauflegen, Karte von Hand des Spielers p entfernen - Spieler über neue Kartenkonstellation informieren
@@ -117,6 +133,7 @@ namespace Uno
 		/// </summary>
 		public bool DrawCard(UnoPlayer p)
 		{
+           
           if (p.PutCard(CardStack.Pop()))
 			return true;
           else
