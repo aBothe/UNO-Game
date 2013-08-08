@@ -88,12 +88,28 @@ namespace Uno
 		{
 			errorMsg = null;
 			// Ist Karte kompatibel zu zuletzt auf den Stack gelegter Karte?
+            Card card = CardStack.Peek();
+            if (c.Caption != card.Caption || c.Color != card.Color)
+            {
+                return false;
+            }
+            else
+            {
+                if (p.CardCount == 0 && p.PressedUnoButton)
+                {
+                    // Spieler hat gewonnen !
+                }
+                
 
+                p.RemoveCard(c);
+                CardStack.Push(c);
+                return true;
+            }
 			// Karte darauflegen, Karte von Hand des Spielers p entfernen - Spieler über neue Kartenkonstellation informieren
 
 			// Strafwerte/Zustände anpassen, nächsten Spieler bestimmen, Gewinn feststellen, Gewinner/Verlierer benachrichtigen
-
-			return true;
+          
+		
 		}
 
 		/// <summary>
@@ -101,15 +117,22 @@ namespace Uno
 		/// </summary>
 		public bool DrawCard(UnoPlayer p)
 		{
+          if (p.PutCard(CardStack.Pop()))
 			return true;
+          else
+              return false;
 		}
 
 		public bool PressUnoButton(UnoPlayer p)
 		{
 			// Prüfen, ob Uno-Button gedrückt werden kann
-
-			p.PressedUnoButton = true;
-			return true;
+            if (p.CardCount <= 1)
+            {
+                p.PressedUnoButton = true;
+                return true;
+            }
+            else
+                return false;
 		}
 
 		public bool SkipRound(UnoPlayer p)
