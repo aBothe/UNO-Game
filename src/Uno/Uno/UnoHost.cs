@@ -97,7 +97,7 @@ namespace Uno
             {
                 if (p.CardCount == 0 && p.PressedUnoButton)
                 {
-                    // Spieler hat gewonnen !
+                    // Spieler hat gewonnenn !
                 }
                 
 
