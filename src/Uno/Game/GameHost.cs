@@ -253,7 +253,7 @@ namespace Uno.Game
 						player.ReadyToPlay = r.ReadBoolean ();
 
 						// Send update to clients
-						DistributePlayerUpdate (player);
+						DistributeGeneralPlayerUpdate (player);
 						CheckGameStartable ();
 					}
 					break;
@@ -294,24 +294,12 @@ namespace Uno.Game
 						break;
 
 					w.Write (player.Id);
-					w.Write ((byte)ClientMessage.PlayerInfo);
-					//w.Write (player.ReadyToPlay);
-
-					OnComposePlayerInfo (player, w);
+					ComposeSpecificPlayerInfoBytes (player, w);
 					break;
 
 				case HostMessage.GetPlayersInfo:
 					w.Write (playerId);
-					w.Write ((byte)ClientMessage.GeneralPlayersInfo);
-
-					lock (players) {
-						w.Write ((byte)PlayerCount);
-						foreach (var p in players) {
-							w.Write (p.Nick);
-							w.Write (p.ReadyToPlay);
-							OnComposeGeneralPlayerInfo (p, w);
-						}
-					}
+					ComposeGeneralPlayerInfoBytes (w);
 					break;
 			}
 
@@ -327,7 +315,7 @@ namespace Uno.Game
 		protected abstract Player CreatePlayer(string nick);
 
 		protected virtual void OnPlayerAdded(Player player)	{
-			DistributePlayerUpdate (player);
+			DistributeGeneralPlayerUpdate (player);
 			CheckGameStartable ();
 		}
 		protected virtual void OnPlayerDisconnecting(Player p,ClientMessage reason) {}
@@ -393,16 +381,16 @@ namespace Uno.Game
 			}
 		}
 
-		protected void DistributePlayerUpdate(long id)
+		protected void DistributeGeneralPlayerUpdate(long id)
 		{
 			var p = GetPlayer (id);
 			if (p == null)
 				throw new InvalidDataException ("id");
 
-			DistributePlayerUpdate (p);
+			DistributeGeneralPlayerUpdate (p);
 		}
 
-		protected void DistributePlayerUpdate(Player p)
+		protected void DistributeGeneralPlayerUpdate(Player p)
 		{
 			using (var ms = new MemoryStream())
 				using (var w = new BinaryWriter(ms)) {
@@ -413,6 +401,50 @@ namespace Uno.Game
 				w.Write (p.ReadyToPlay);
 				OnComposeGeneralPlayerInfo (p, w);
 				SendToAllPlayers (ms.ToArray ());
+			}
+		}
+
+		protected void DistributeGeneralPlayerUpdate()
+		{
+			using (var ms = new MemoryStream())
+				using (var w = new BinaryWriter(ms)) {
+				ComposeGeneralPlayerInfoBytes (w);
+				SendToAllPlayers (ms.ToArray ());
+			}
+		}
+
+		protected void ComposeGeneralPlayerInfoBytes(BinaryWriter w)
+		{
+			w.Write ((byte)ClientMessage.GeneralPlayersInfo);
+
+			lock (players) {
+				w.Write ((byte)PlayerCount);
+				foreach (var p in players) {
+					w.Write (p.Nick);
+					w.Write (p.ReadyToPlay);
+					OnComposeGeneralPlayerInfo (p, w);
+				}
+			}
+		}
+
+		protected void ComposeSpecificPlayerInfoBytes(Player p, BinaryWriter w)
+		{
+			w.Write ((byte)ClientMessage.PlayerInfo);
+			//w.Write (player.ReadyToPlay);
+
+			OnComposePlayerInfo (p, w);
+		}
+
+		protected void DistributeEachSpecificPlayerInfo()
+		{
+			using (var ms = new MemoryStream())
+			using (var w = new BinaryWriter(ms)) {
+				lock (players)
+					foreach(var p in players) {
+						ComposeSpecificPlayerInfoBytes (p, w);
+						SendToPlayer (p,ms);
+						ms.SetLength (0);
+					}
 			}
 		}
 		#endregion
@@ -427,6 +459,16 @@ namespace Uno.Game
 			BitConverter.GetBytes (p.Id).CopyTo (actData, 0);
 			actData [sizeof(long)] = (byte)ClientMessage.GameData;
 			data.CopyTo (actData, sizeof(long) + 1);
+
+			Send (actData, p.Address);
+		}
+
+		protected void SendToPlayer(Player p, byte[] data)
+		{
+			var actData = new byte[data.Length + sizeof(long)];
+
+			BitConverter.GetBytes (p.Id).CopyTo (actData, 0);
+			data.CopyTo (actData, sizeof(long));
 
 			Send (actData, p.Address);
 		}

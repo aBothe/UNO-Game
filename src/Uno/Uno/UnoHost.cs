@@ -294,7 +294,9 @@ namespace Uno
 				return false;
 			autoStepToNextPlayer = true;
 
-
+			// Alle Karteninformationen spielerseitig aktualisieren
+			DistributeEachSpecificPlayerInfo ();
+			DistributeGeneralPlayerUpdate ();
 
 			return true;
 		}
