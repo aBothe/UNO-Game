@@ -140,10 +140,6 @@ namespace Uno
 			return false;
 		}
 
-		/// <summary>
-		/// Used only when starting a game.
-		/// </summary>
-		bool autoStepToNextPlayer = true;
 		public bool TryPutOnStack (UnoPlayer p, Card c, CardColor colorSelection, out string errorMsg)
 		{
 			errorMsg = null;
@@ -173,7 +169,14 @@ namespace Uno
 				if(p.PressedUnoButton)
 				{
 					// Spieler hat gewonnen !
+					using (var ms = new MemoryStream())
+					using (var w = new BinaryWriter(ms)) {
+						w.Write ((byte)ClientMessage.GameFinished);
+						w.Write (p.Nick);
+					}
+
 					NoticeGameFinished(false);
+					return true;
 				}
 				else
 				{
@@ -214,7 +217,7 @@ namespace Uno
 			}
 
 			// nächsten Spieler bestimmen
-			if(autoStepToNextPlayer)
+			if(State != GameState.StartPlaying)
 				StepToNextPlayer();
 			InformNewPlayer();
 
@@ -314,10 +317,8 @@ namespace Uno
 			// Dem nächsten Player signalisieren, dass er/sie dran ist
 			NextPlayer.PutCard (firstCard);
 			string errMsg;
-			autoStepToNextPlayer = false;
 			if (!TryPutOnStack (NextPlayer, firstCard, CurrentColor, out errMsg))
 				return false;
-			autoStepToNextPlayer = true;
 
 			// Alle Karteninformationen spielerseitig aktualisieren
 			DistributeSpecificPlayerUpdate ();
@@ -332,9 +333,17 @@ namespace Uno
 			var unop = p as UnoPlayer;
 
 			w.Write ((byte)unop.CardCount);
+			var recommCards = new List<ushort> ();
 
-			foreach (var c in unop.Cards)
+			foreach (var c in unop.Cards) {
 				w.Write (c.ToHash ());
+				if (IsCardCompatibleToStack (c))
+					recommCards.Add (c.ToHash ());
+			}
+
+			w.Write ((byte)recommCards.Count);
+			foreach (var hash in recommCards)
+				w.Write (hash);
 			
 			base.OnComposePlayerInfo (p, w);
 		}
@@ -397,7 +406,7 @@ namespace Uno
 			using (var w = new BinaryWriter(ms)) {
 
 				w.Write ((byte)UnoMessage.GameStates);
-				w.Write (CardStack.Count);
+				w.Write ((byte)CardStack.Count);
 				w.Write (CardStack.Peek ().ToHash ());
 				w.Write ((byte)CurrentColor);
 				w.Write (ClockwiseDirection);
