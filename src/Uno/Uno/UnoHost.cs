@@ -41,7 +41,7 @@ namespace Uno
 		public UnoPlayer NextPlayer { 
 			get { return GetPlayer (NextPlayerId) as UnoPlayer; }
 			set {
-				PreviousPlayerId = value;
+				PreviousPlayerId = NextPlayerId;
 				NextPlayerId = value != null ? value.Id : 0;
 			}
 		}
@@ -97,19 +97,19 @@ namespace Uno
 			var i = GetPlayerIndex (NextPlayer);
 			if (ClockwiseDirection) {
 				if (i == -1 || i+1 >= PlayerCount){
-					NextPlayer = GetPlayerByIndex (0);
+					NextPlayer = GetPlayerByIndex (0) as UnoPlayer;
 					return;
 				}
 
-				NextPlayer = GetPlayerByIndex (i + 1);
+				NextPlayer = GetPlayerByIndex (i + 1) as UnoPlayer;
 
 			} else {
 				if (i == -1 || i-1 < 0){
-					NextPlayer = GetPlayerByIndex (PlayerCount-1);
+					NextPlayer = GetPlayerByIndex (PlayerCount-1) as UnoPlayer;
 					return;
 				}
 
-				NextPlayer = GetPlayerByIndex (i - 1);
+				NextPlayer = GetPlayerByIndex (i - 1) as UnoPlayer;
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace Uno
 
 			// Ist Karte kompatibel zu zuletzt auf den Stack gelegter Karte?
 			// Zusatz: Wenn der Spieler nur noch eine (unpassende) Farbwahlkarte hat, so kann und muss er diese ablegen!
-			if (!IsCardCompatibleToStack (c) && (p.CardCount > 1 || )) {
+			if (!IsCardCompatibleToStack (c) && (p.CardCount > 1 || c.Caption == CardCaption.WishColor)) {
 				errorMsg = "Card not allowed to be put on the stack!";
 				// Eigentlich müsste nun neue Karte gezogen werden - jedoch explizit durch den Spieler
 				return false;
@@ -187,6 +187,7 @@ namespace Uno
 					var next = NextPlayer;
 					next.PutCard(AvailableCards.GiveCard());
 					next.PutCard(AvailableCards.GiveCard());
+					DistributeSpecificPlayerUpdate(next);
 					break;
 				case CardCaption.RevertDirectionAndNewColor:
 					ClockwiseDirection = !ClockwiseDirection;
@@ -198,10 +199,11 @@ namespace Uno
 					// Neue Farbe schon geschrieben
 					break;
 				case CardCaption.Take4:
-					StepToNextPlayer();
+					StepToNextPlayer ();
 					next = NextPlayer;
-					for(int i = 4; i > 0; i--)
-						next.PutCard(AvailableCards.GiveCard());
+					for (int i = 4; i > 0; i--)
+						next.PutCard (AvailableCards.GiveCard ());
+					DistributeSpecificPlayerUpdate (next);
 					break;
 				default:
 					// Normale Karten (Nummern) wurden bereits abgearbeitet.
@@ -215,10 +217,10 @@ namespace Uno
 
 			     
 			// Spieler über neue Kartenkonstellation informieren
+			DistributeGeneralPlayerUpdate ();
+			DistributeSpecificPlayerUpdate (NextPlayer);
 
-			// Strafwerte/Zustände anpassen, , Gewinn feststellen, Gewinner/Verlierer benachrichtigen
-          
-		
+			return true;
 		}
 
 		/// <summary>
@@ -295,7 +297,7 @@ namespace Uno
 			autoStepToNextPlayer = true;
 
 			// Alle Karteninformationen spielerseitig aktualisieren
-			DistributeEachSpecificPlayerInfo ();
+			DistributeSpecificPlayerUpdate ();
 			DistributeGeneralPlayerUpdate ();
 
 			return true;

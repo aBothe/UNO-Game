@@ -427,7 +427,7 @@ namespace Uno.Game
 			}
 		}
 
-		protected void ComposeSpecificPlayerInfoBytes(Player p, BinaryWriter w)
+		void ComposeSpecificPlayerInfoBytes(Player p, BinaryWriter w)
 		{
 			w.Write ((byte)ClientMessage.PlayerInfo);
 			//w.Write (player.ReadyToPlay);
@@ -435,14 +435,32 @@ namespace Uno.Game
 			OnComposePlayerInfo (p, w);
 		}
 
-		protected void DistributeEachSpecificPlayerInfo()
+		protected void DistributeSpecificPlayerUpdate(long id)
+		{
+			var p = GetPlayer (id);
+			if (p == null)
+				throw new InvalidDataException ("id");
+
+			DistributeSpecificPlayerUpdate (p);
+		}
+
+		protected void DistributeSpecificPlayerUpdate(Player p)
+		{
+			using (var ms = new MemoryStream())
+				using (var w = new BinaryWriter(ms)) {
+				ComposeSpecificPlayerInfoBytes (p, w);
+				SendToPlayer (p,ms.ToArray());
+			}
+		}
+
+		protected void DistributeSpecificPlayerUpdate()
 		{
 			using (var ms = new MemoryStream())
 			using (var w = new BinaryWriter(ms)) {
 				lock (players)
 					foreach(var p in players) {
 						ComposeSpecificPlayerInfoBytes (p, w);
-						SendToPlayer (p,ms);
+						SendToPlayer (p,ms.ToArray());
 						ms.SetLength (0);
 					}
 			}
