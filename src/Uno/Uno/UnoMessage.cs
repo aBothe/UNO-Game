@@ -11,6 +11,7 @@ namespace Uno
 		ActionNotAllowed = 0,
 
 		YouAreNext,
+		GameStates,
 		/// <summary>
 		/// Will be sent out just for telling the winner's name
 		/// </summary>

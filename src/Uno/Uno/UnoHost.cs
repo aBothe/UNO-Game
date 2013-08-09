@@ -50,6 +50,8 @@ namespace Uno
 		public bool ClockwiseDirection;
 		public CardColor CurrentColor;
 
+		bool PlayerDrewCard = false;
+
 		#region LowLevel
 
 		public override string GameTitle {
@@ -94,6 +96,7 @@ namespace Uno
 
 		void StepToNextPlayer()
 		{
+			PlayerDrewCard = false;
 			var i = GetPlayerIndex (NextPlayer);
 			if (ClockwiseDirection) {
 				if (i == -1 || i+1 >= PlayerCount){
@@ -219,6 +222,7 @@ namespace Uno
 			// Spieler über neue Kartenkonstellation informieren
 			DistributeGeneralPlayerUpdate ();
 			DistributeSpecificPlayerUpdate (NextPlayer);
+			DistributeGameStates ();
 
 			return true;
 		}
@@ -226,9 +230,24 @@ namespace Uno
 		/// <summary>
 		/// Wenn der Spieler keinen anderen Zug machen kann/will(!!), werden dem Spieler hier Strafkarten angerechnet.
 		/// </summary>
-		public bool DrawCard (UnoPlayer p)
+		public bool DrawCard (UnoPlayer p, bool sendupdate = true)
 		{
-			return p.PutCard (AvailableCards.GiveCard ());
+			if (NextPlayer != p)
+				return false;
+
+			var c = AvailableCards.GiveCard ();
+			if (!p.PutCard (c)) {
+				AvailableCards.Put (c);
+				return false;
+			}
+
+			if (sendupdate) {
+				DistributeSpecificPlayerUpdate (p);
+				DistributeGeneralPlayerUpdate ();
+			}
+			PlayerDrewCard = true;
+
+			return true;
 		}
 
 		public bool PressUnoButton (UnoPlayer p)
@@ -243,6 +262,10 @@ namespace Uno
 
 		public bool SkipRound (UnoPlayer p)
 		{
+			if (NextPlayer != p || !PlayerDrewCard)
+				return false;
+
+			StepToNextPlayer ();
 			return true;
 		}
 
@@ -299,6 +322,7 @@ namespace Uno
 			// Alle Karteninformationen spielerseitig aktualisieren
 			DistributeSpecificPlayerUpdate ();
 			DistributeGeneralPlayerUpdate ();
+			DistributeGameStates ();
 
 			return true;
 		}
@@ -364,6 +388,22 @@ namespace Uno
 			if (errorMsg != null) {
 				w.Write ((byte)UnoMessage.ActionNotAllowed);
 				w.Write (errorMsg);
+			}
+		}
+
+		public void DistributeGameStates()
+		{
+			using (var ms = new MemoryStream())
+			using (var w = new BinaryWriter(ms)) {
+
+				w.Write ((byte)UnoMessage.GameStates);
+				w.Write (CardStack.Count);
+				w.Write (CardStack.Peek ().ToHash ());
+				w.Write ((byte)CurrentColor);
+				w.Write (ClockwiseDirection);
+				w.Write (NextPlayer.Nick);
+
+				SendGameDataToAllPlayers (ms.ToArray());
 			}
 		}
 	}
