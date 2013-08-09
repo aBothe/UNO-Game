@@ -183,6 +183,7 @@ namespace Uno
 
 	public enum CardCaption : byte
 	{
+		None,
 		Zero,
 		One,
 		Two,
@@ -194,17 +195,28 @@ namespace Uno
 		Eight,
 		Nine,
 		/// <summary>
-		/// Colored.
+		/// Colored. Zieh Zwei (+2) – Der nächste Spieler muss zwei Karten aufnehmen und wird übersprungen.
 		/// </summary>
 		Take2,
+		/// <summary>
+		/// Retour – Bei mehr als zwei Spielern wird die Spielrichtung gewechselt, 
+		/// bei zwei Spielern hat die Karte die gleiche Funktion wie die Aussetzen-Karte.
+		/// </summary>
 		RevertDirectionAndNewColor,
+		/// <summary>
+		/// Aussetzen – Der nächste Spieler wird übersprungen.
+		/// </summary>
 		SkipNextPlayer,
 		/// <summary>
-		/// Black
+		/// Zieh Vier Farbwahl (+4) – Der nächste Spieler muss vier Karten aufnehmen und wird übersprungen, außerdem kann der Spieler, der die +4 gelegt hat, die zu spielende Farbe bestimmen.
 		/// </summary>
 		Take4,
-		WishColor,
-        None
+		/// <summary>
+		/// Farbwahl – Der Spieler, der diese Karte spielt, schreibt dem nächsten Spieler vor, 
+		/// welche Farbe dieser legen muss. 
+		/// Man darf diese Karte jedoch nicht auf eine andere Farbwahlkarte legen.
+		/// </summary>
+		WishColor
 	}
 }
 

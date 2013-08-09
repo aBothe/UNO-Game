@@ -89,6 +89,15 @@ namespace Uno.Game
 			return null;
 		}
 
+		public int GetPlayerIndex(Player p)
+		{
+			return players.IndexOf (p);
+		}
+
+		public Player GetPlayerByIndex(int i)
+		{
+			return players [i];
+		}
 
 		GameState state;
 		public GameState State { get{return state;}

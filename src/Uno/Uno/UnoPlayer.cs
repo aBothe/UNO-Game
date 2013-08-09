@@ -32,8 +32,7 @@ namespace Uno
 	public class UnoPlayer : Player
 	{
 		public new UnoHost Host {get {return base.Host as UnoHost; }}
-
-	 readonly List<Card> Hand = new List<Card>();
+		readonly List<Card> Hand = new List<Card>();
 		public bool PressedUnoButton;
 
 		public int CardCount { get { return Hand.Count; } }
