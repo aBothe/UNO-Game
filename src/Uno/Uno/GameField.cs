@@ -39,7 +39,13 @@ namespace Uno.Uno
 		private void mainPanel_Paint (object sender, PaintEventArgs e)
 		{
 			var g = e.Graphics;
-			
+
+			var breite = (float)mainPanel.Width;
+			var hoehe = (float)mainPanel.Height;
+
+			var mittelPunkt_X = breite / 2f;
+			var mittelPunkt_Y = hoehe / 2f;
+
 			// Oberste Karte im Stapel in der Mitte zeichnen
 			var img = Connection.TopMostCard.GetImage ();
 
@@ -47,12 +53,15 @@ namespace Uno.Uno
 			var dblFac = dblWidth / (float)img.Width;
 			var dblHeight = dblFac * img.Height;
 
-			g.DrawImage (img, new RectangleF ((float)mainPanel.Width / 2f - dblWidth / 2f, 
-			                                  (float)mainPanel.Height / 2f - dblHeight / 2f, dblWidth, dblHeight));
+			g.DrawImage (img, new RectangleF (mittelPunkt_X - dblWidth / 2f, mittelPunkt_Y - dblHeight / 2f, dblWidth, dblHeight));
 
 			// Andere Spieler kreisförmig um die Mitte anordnen, 
 			// wobei das Dreieck zwischen unterer linker, rechter Panelecke und Panelmittelpunkt ausgespart wird
 
+			// Den verfügbaren Kreisausschnitt um die Panelmitte berechnen (Erklärung - siehe Doku)
+			var gamma = 360.0 - 180.0 * Math.Acos (1.0-(Math.Pow(breite,2) / (2.0 * Math.Pow(mittelPunkt_Y,2.0) + 0.5 * Math.Pow(breite,2.0)))) / Math.PI;
+
+			var winkelDistanz = gamma / (double)Connection.OtherPlayersHandSize.Count;
 		}
 
 		public static Bitmap ResizeMe (Image srcImg, double dblWidth)
