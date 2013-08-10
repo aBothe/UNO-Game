@@ -62,11 +62,16 @@ namespace Uno
 			return obj is Card && ((Card)obj).ToHash () == ToHash ();
 		}
 
-        public Bitmap GetImage()
+		public Bitmap GetImage()
+		{
+			return GetImage(Caption, Color);
+		}
+
+        public static Bitmap GetImage(CardCaption caption, CardColor color)
         {
 			var sb = new StringBuilder();
 
-			switch (Caption)
+			switch (caption)
 			{
 				case CardCaption.Zero:
 					sb.Append("ZERO");
@@ -124,7 +129,7 @@ namespace Uno
 					break;
 			}
 
-            switch (Color)
+            switch (color)
             {
                 case CardColor.Red:
                     sb.Append("_Red");

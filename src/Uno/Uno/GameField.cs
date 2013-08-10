@@ -49,6 +49,11 @@ namespace Uno.Uno
 		#region Main panel
 		private void mainPanel_Paint(object sender, PaintEventArgs e)
 		{
+			var g = e.Graphics;
+			
+			// Oberste Karte im Stapel in der Mitte zeichnen
+
+			// Andere Spieler kreisförmig um die Mitte anordnen, wobei das Dreieck zwischen unterer linker, rechter Panelecke
 
 		}
 		#endregion
