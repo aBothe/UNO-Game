@@ -6,95 +6,114 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Uno.Game;
+using System.Drawing.Drawing2D;
 
 namespace Uno.Uno
 {
-    public partial class GameField : Form
+	public partial class GameField : Form
 	{
+
 		#region Properties
+
 		public readonly UnoGameConnection Connection;
-        List<PictureBox> KartenBilder = new List<PictureBox>();
-        List<Bitmap> bilder = new List<Bitmap>();
-        List<Card> spielerHand = new List<Card>();
-        Card backCard = new Card(CardColor.None, CardCaption.None);
-        int aktuellePoistionHand = 0;
-        
-        CardDeck deck = new CardDeck();
+
 		#endregion
 
 		#region Init / Constructor
-		public GameField(UnoGameConnection con)
-        {
+
+		public GameField (UnoGameConnection con)
+		{
 			this.Connection = con;
-            InitializeComponent();
-            deck.Reset();
-           
-                //KartenBilder.Add(pictureBox1);
-         
-            
-        }
+			InitializeComponent ();
+		}
 
-        private void GameField_Load(object sender, EventArgs e)
-        {
-           spielerHand = deck.GiveFirstHand();
+		private void GameField_Load (object sender, EventArgs e)
+		{
 
-            for (int i = 0; i < 7; i++)
-            {
-                Bitmap bild = spielerHand[i].GetImage();
-                bilder.Add(bild);
-            }
-        }
+		}
+
 		#endregion
 
 		#region Main panel
-		private void mainPanel_Paint(object sender, PaintEventArgs e)
+
+		private void mainPanel_Paint (object sender, PaintEventArgs e)
 		{
 			var g = e.Graphics;
 			
 			// Oberste Karte im Stapel in der Mitte zeichnen
+			var img = Connection.TopMostCard.GetImage ();
 
-			// Andere Spieler kreisförmig um die Mitte anordnen, wobei das Dreieck zwischen unterer linker, rechter Panelecke
+			var dblWidth = 80f;
+			var dblFac = dblWidth / (float)img.Width;
+			var dblHeight = dblFac * img.Height;
+
+			g.DrawImage (img, new RectangleF ((float)mainPanel.Width / 2f - dblWidth / 2f, 
+			                                  (float)mainPanel.Height / 2f - dblHeight / 2f, dblWidth, dblHeight));
+
+			// Andere Spieler kreisförmig um die Mitte anordnen, 
+			// wobei das Dreieck zwischen unterer linker, rechter Panelecke und Panelmittelpunkt ausgespart wird
 
 		}
+
+		public static Bitmap ResizeMe (Image srcImg, double dblWidth)
+		{
+			// Faktor berechnen
+			double dblFac = dblWidth / srcImg.Width;
+			double dblHeight = dblFac * srcImg.Height;
+
+			// Bild bearbeiten
+			Bitmap resizedImg = new Bitmap ((int)dblWidth, (int)dblHeight);
+			using (Graphics gNew = Graphics.FromImage(resizedImg)) {
+				gNew.InterpolationMode = InterpolationMode.HighQualityBicubic;
+				gNew.DrawImage (srcImg, new Rectangle (0, 0, (int)dblWidth, (int)dblHeight));
+			}
+			return resizedImg;
+		}
+
 		#endregion
 
 		#region Hand panel
-		private void handPanel_Paint(object sender, PaintEventArgs e)
+
+		private void handPanel_Paint (object sender, PaintEventArgs e)
 		{
 			
 		}
 
-		private void handPanel_MouseMove(object sender, MouseEventArgs e)
+		private void handPanel_MouseMove (object sender, MouseEventArgs e)
 		{
 
 		}
 
-		private void handPanel_MouseClick(object sender, MouseEventArgs e)
+		private void handPanel_MouseClick (object sender, MouseEventArgs e)
 		{
 
 		}
+
 		#endregion
 
 		#region Buttons
-		private void button_DrawCard_Click(object sender, EventArgs e)
+
+		private void button_DrawCard_Click (object sender, EventArgs e)
 		{
-			Connection.DrawCard();
+			Connection.DrawCard ();
 		}
 
-		private void check_Uno_CheckedChanged(object sender, EventArgs e)
+		private void check_Uno_CheckedChanged (object sender, EventArgs e)
 		{
-			Connection.PressUnoButton();
+			Connection.PressUnoButton ();
 		}
 
-		private void button_Skip_Click(object sender, EventArgs e)
+		private void button_Skip_Click (object sender, EventArgs e)
 		{
-			Connection.SkipRound();
+			Connection.SkipRound ();
 		}
 
-		private void button_Leave_Click(object sender, EventArgs e)
+		private void button_Leave_Click (object sender, EventArgs e)
 		{
-			Connection.Disconnect();
+			Connection.Disconnect ();
 		}
+
 		#endregion
+
 	}
 }

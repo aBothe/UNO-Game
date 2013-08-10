@@ -140,10 +140,28 @@ namespace Uno.Games
 
 		private void Click_Refresh(object sender, EventArgs e)
 		{
-			RefreshServerList();
+			//RefreshServerList();
            
-            
+			var con = new UnoGameConnection ();
+			con.CardsOnStack = 10;
+			con.TopMostCard = new Card (CardColor.Blue, CardCaption.Four);
+			con.ColorSelection = CardColor.Blue;
 
+			con.OtherPlayersHandSize ["a"]= 3;
+			con.OtherPlayersHandSize ["b"]= 4;
+			con.OtherPlayersHandSize ["c"]= 5;
+			con.OtherPlayersHandSize ["d"]= 8;
+			con.CurrentPlayer = "c";
+			con.PlayerNick = "a";
+			con.OwnHand.Add (new Card (CardColor.Black, CardCaption.Take4));
+			con.OwnHand.Add (new Card (CardColor.Red, CardCaption.Five));
+			con.OwnHand.Add (new Card (CardColor.Green, CardCaption.RevertDirectionAndNewColor));
+
+			con.RecommendedCards.Add (new Card (CardColor.Black, CardCaption.Take4));
+
+			var f = new GameField (con);
+
+			f.Show ();
 		}
 		#endregion
 

@@ -16,7 +16,7 @@ namespace Uno.Game
 
 		readonly long ConnectId = IdGenerator.GenerateId();
 		public long PlayerId {get; private set; }
-		public string PlayerNick { get; private set;}
+		public string PlayerNick;// { get; private set;}
 
 		bool connected;
 		public bool IsConnected

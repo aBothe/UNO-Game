@@ -147,23 +147,6 @@ namespace Uno
 
 			return Resources.ResourceManager.GetObject(sb.ToString()) as Bitmap;
         }
-
-        public static Bitmap ResizeMe(Image srcImg, double dblWidth)
-        {
-            // Faktor berechnen
-            double dblFac = dblWidth / srcImg.Width;
-            double dblHeight = dblFac * srcImg.Height;
-
-            // Bild bearbeiten
-            Bitmap resizedImg = new Bitmap((int)dblWidth, (int)dblHeight);
-            using (Graphics gNew = Graphics.FromImage(resizedImg))
-            {
-                gNew.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                gNew.DrawImage(srcImg, new Rectangle(0, 0, (int)dblWidth, (int)dblHeight));
-            }
-            return resizedImg;
-        }
-	
 	}
 
 	public enum CardColor : byte
