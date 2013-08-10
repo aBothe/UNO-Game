@@ -11,6 +11,7 @@ namespace Uno.Uno
 {
     public partial class GameField : Form
     {
+		public readonly UnoGameConnection Connection;
         List<PictureBox> KartenBilder = new List<PictureBox>();
         List<Bitmap> bilder = new List<Bitmap>();
         List<Card> spielerHand = new List<Card>();
@@ -19,8 +20,9 @@ namespace Uno.Uno
         
         CardDeck deck = new CardDeck();
 
-        public GameField()
+        public GameField(UnoGameConnection con)
         {
+			this.Connection = con;
             InitializeComponent();
             deck.Reset();
            

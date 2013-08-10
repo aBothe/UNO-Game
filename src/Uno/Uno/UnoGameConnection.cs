@@ -68,7 +68,7 @@ namespace Uno
 		void NotifyPropChanged(UnoProperty prop)
 		{
 			if (PropertyChanged != null) {
-				Field.BeginInvoke (PropertyChanged, prop);
+				Program.MainForm.BeginInvoke (PropertyChanged, prop);
 			}
 		}
 		#endregion
@@ -81,11 +81,17 @@ namespace Uno
 
 		protected override void OnGameFinished(bool aborted)
 		{
+			Field.Close ();
+			Field.Dispose ();
+			Field = null;
+
 			base.OnGameFinished(aborted);
 		}
 
 		protected override void OnGameStarted()
 		{
+			Field = new GameField (this);
+
 			base.OnGameStarted();
 		}
 
@@ -148,6 +154,33 @@ namespace Uno
 					MessageBox.Show (r.ReadString()+" has won the game!","Game finished");
 					break;
 			}
+		}
+
+		public void PressUnoButton()
+		{
+			SendGameData (new[] {(byte)UnoMessage.PressUno});
+		}
+
+		public void PutCardOnStackTop(Card c, CardColor color)
+		{
+			var d = new byte[1+2+ (c.Color == CardColor.Black ? 0 : 1)];
+			d [0] = (byte)UnoMessage.PutCard;
+			BitConverter.GetBytes (c.ToHash ()).CopyTo (d, 1);
+
+			if (c.Color != CardColor.Black)
+				d [3] = (byte)color;
+
+			SendGameData (d);
+		}
+
+		public void DrawCard()
+		{
+			SendGameData (new[] {(byte)UnoMessage.DrawCardFromStack});
+		}
+
+		public void SkipRound()
+		{
+			SendGameData (new[] {(byte)UnoMessage.SkipRound});
 		}
 		#endregion
 	}
