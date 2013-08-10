@@ -74,6 +74,13 @@ namespace Uno
 		#endregion
 
 		#region Init/Exit handlers
+		void CloseFieldGUI()
+		{
+			Field.Close();
+			Field.Dispose();
+			Field = null;
+		}
+
 		public override void Initialize(string nick)
 		{
 			base.Initialize(nick);
@@ -81,10 +88,7 @@ namespace Uno
 
 		protected override void OnGameFinished(bool aborted)
 		{
-			Field.Close ();
-			Field.Dispose ();
-			Field = null;
-
+			Field.BeginInvoke(new MethodInvoker(CloseFieldGUI));
 			base.OnGameFinished(aborted);
 		}
 
@@ -101,6 +105,12 @@ namespace Uno
 			PropertyChanged (UnoProperty.OtherPlayersHandSize);
 
 			base.OnOtherPlayerLeft(nick);
+		}
+
+		protected override void OnDisconnected(ClientMessage msg, string reason)
+		{
+			Field.BeginInvoke(new MethodInvoker(CloseFieldGUI));
+			base.OnDisconnected(msg, reason);
 		}
 		#endregion
 

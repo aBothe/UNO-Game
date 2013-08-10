@@ -63,7 +63,7 @@ namespace Uno
         public Bitmap getImage()
         {
            
-            String imageLocation = "/Uno Karten/";
+            var imageLocation = "/karten/";
 
             switch (Color)
             {
@@ -147,8 +147,8 @@ namespace Uno
             }
 
            
-            Bitmap bitmap = new Bitmap("C:/Users/Tido/Documents/Visual Studio 2012/Projects/UNO-Game/src/Uno/bin/Debug/"+imageLocation);
-           bitmap =  ResizeMe(bitmap,80);
+            var bitmap = new Bitmap("."+imageLocation);
+			bitmap =  ResizeMe(bitmap,80);
             return bitmap;
 
         }
