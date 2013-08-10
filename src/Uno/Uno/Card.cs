@@ -26,6 +26,8 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Text;
+using Uno.Properties;
 
 namespace Uno
 {
@@ -60,100 +62,88 @@ namespace Uno
 			return obj is Card && ((Card)obj).ToHash () == ToHash ();
 		}
 
-        public Bitmap getImage()
+        public Bitmap GetImage()
         {
-           
-            var imageLocation = "/karten/";
+			var sb = new StringBuilder();
+
+			switch (Caption)
+			{
+				case CardCaption.Zero:
+					sb.Append("ZERO");
+					break;
+				case CardCaption.One:
+					sb.Append("ONE");
+					break;
+				case CardCaption.Two:
+					sb.Append("TWO");
+					break;
+				case CardCaption.Three:
+					sb.Append("THREE");
+					break;
+				case CardCaption.Four:
+					sb.Append("FOUR");
+					break;
+				case CardCaption.Five:
+					sb.Append("FIVE");
+					break;
+				case CardCaption.Six:
+					sb.Append("SIX");
+					break;
+				case CardCaption.Seven:
+					sb.Append("SEVEN");
+					break;
+				case CardCaption.Eight:
+					sb.Append("EIGHT");
+					break;
+				case CardCaption.Nine:
+					sb.Append("NINE");
+					break;
+
+				case CardCaption.WishColor:
+					sb.Append("WILD");
+					break;
+
+				case CardCaption.Take4:
+					sb.Append("FOUR_WILD");
+					break;
+
+				case CardCaption.Take2:
+					sb.Append("DRAW_TWO");
+					break;
+
+				case CardCaption.RevertDirectionAndNewColor:
+					sb.Append("REVERSE");
+					break;
+
+				case CardCaption.SkipNextPlayer:
+					sb.Append("SKIP");
+					break;
+
+				case CardCaption.None:
+					sb.Append("BACKCARD");
+					break;
+			}
 
             switch (Color)
             {
                 case CardColor.Red:
-                    imageLocation += "RED/";
+                    sb.Append("_Red");
                     break;
                 case CardColor.Green:
-                    imageLocation += "GREEN/";
+                    sb.Append("_Green");
                     break;
                 case CardColor.Yellow:
-                    imageLocation += "YELLOW/";
+                    sb.Append("_Yellow");
                     break;
                 case CardColor.Blue:
-                    imageLocation += "BLUE/";
-                    break;
-                case CardColor.Black:
-                    imageLocation += "BLACK/";
-                    break;
-                case CardColor.None:
-                    imageLocation += "BLACK/";
+                    sb.Append("_Blue");
                     break;
             }
 
-            switch (Caption)
-            {
-                case CardCaption.Zero:
-                    imageLocation += "ZERO.png";
-                    break;
-                case CardCaption.One:
-                    imageLocation += "ONE.png";
-                    break;
-                case CardCaption.Two:
-                    imageLocation += "TWO.png";
-                    break;
-                case CardCaption.Three:
-                    imageLocation += "THREE.png";
-                    break;
-                case CardCaption.Four:
-                    imageLocation += "FOUR.png";
-                    break;
-                case CardCaption.Five:
-                    imageLocation += "FIVE.png";
-                    break;
-                case CardCaption.Six:
-                    imageLocation += "SIX.png";
-                    break;
-                case CardCaption.Seven:
-                    imageLocation += "SEVEN.png";
-                    break;
-                case CardCaption.Eight:
-                    imageLocation += "EIGHT.png";
-                    break;
-                case CardCaption.Nine:
-                    imageLocation += "NINE.png";
-                    break;
-
-                case CardCaption.WishColor:
-                    imageLocation += "WILD.png";
-                    break;
-
-                case CardCaption.Take4:
-                    imageLocation += "FOUR_WILD.png";
-                    break;
-
-                case CardCaption.Take2:
-                    imageLocation += "DRAW_TWO.png";
-                    break;
-
-                case CardCaption.RevertDirectionAndNewColor:
-                    imageLocation += "REVERSE.png";
-                    break;
-
-
-                case CardCaption.SkipNextPlayer:
-                    imageLocation += "SKIP.png";
-                    break;
-
-                case CardCaption.None:
-                    imageLocation += "BACKCARD.png";
-                    break;
-            }
-
-           
-            var bitmap = new Bitmap("."+imageLocation);
-			bitmap =  ResizeMe(bitmap,80);
-            return bitmap;
-
+			return Resources.ResourceManager.GetObject(sb.ToString()) as Bitmap;
         }
 
-        private static Bitmap ResizeMe(Image srcImg, double dblWidth)
+        public static Bitmap ResizeMe(Image srcImg, double dblWidth)
         {
             // Faktor berechnen
             double dblFac = dblWidth / srcImg.Width;

@@ -40,7 +40,7 @@ namespace Uno.Uno
 
             for (int i = 0; i < 7; i++)
             {
-                Bitmap bild = spielerHand[i].getImage();
+                Bitmap bild = spielerHand[i].GetImage();
                 bilder.Add(bild);
             }
         }

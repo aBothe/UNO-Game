@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -114,4 +117,170 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="BACKCARD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLACK\BACKCARD.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DRAW_TWO_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\DRAW_TWO.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DRAW_TWO_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\DRAW_TWO.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DRAW_TWO_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\DRAW_TWO.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DRAW_TWO_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\DRAW_TWO.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EIGHT_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\EIGHT.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EIGHT_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\EIGHT.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EIGHT_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\EIGHT.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EIGHT_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\EIGHT.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FIVE_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\FIVE.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FIVE_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\FIVE.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FIVE_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\FIVE.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FIVE_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\FIVE.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FOUR_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\FOUR.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FOUR_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\FOUR.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FOUR_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\FOUR.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FOUR_WILD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLACK\FOUR_WILD.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FOUR_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\FOUR.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NINE_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\NINE.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NINE_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\NINE.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NINE_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\NINE.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NINE_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\NINE.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ONE_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\ONE.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ONE_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\ONE.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ONE_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\ONE.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ONE_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\ONE.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="REVERSE_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\REVERSE.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="REVERSE_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\REVERSE.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="REVERSE_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\REVERSE.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="REVERSE_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\REVERSE.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SEVEN_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\SEVEN.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SEVEN_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\SEVEN.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SEVEN_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\SEVEN.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SEVEN_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\SEVEN.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SIX_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\SIX.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SIX_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\SIX.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SIX_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\SIX.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SIX_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\SIX.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SKIP_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\SKIP.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SKIP_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\SKIP.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SKIP_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\SKIP.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SKIP_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\SKIP.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="THREE_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\THREE.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="THREE_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\THREE.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="THREE_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\THREE.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="THREE_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\THREE.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TWO_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\TWO.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TWO_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\TWO.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TWO_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\TWO.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TWO_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\TWO.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WILD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLACK\WILD.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ZERO_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\BLUE\ZERO.Blue.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ZERO_Green" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\GREEN\ZERO.Green.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ZERO_Red" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\RED\ZERO.Red.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ZERO_Yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\karten\YELLOW\ZERO.Yellow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
