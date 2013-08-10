@@ -12,6 +12,7 @@ namespace Uno.Uno
 {
 	public partial class GameField : Form
 	{
+        public float [,] xyImage;
 
 		#region Properties
 
@@ -84,18 +85,56 @@ namespace Uno.Uno
 		#region Hand panel
 
 		private void handPanel_Paint (object sender, PaintEventArgs e)
-		{
-			
+        {
+            var g = e.Graphics;
+            int move_position = 0;
+            xyImage = new float[Connection.OwnHand.Count,2];
+
+            for (int i = 0; i < Connection.OwnHand.Count; i++)
+            {
+                for (int j = 0; j < 2; j++) {
+
+                    var breite = (float)handPanel.Width;
+                    var hoehe = (float)handPanel.Height;
+                    var mittelPunkt_X = breite / 4f;
+                    var mittelPunkt_Y = hoehe / 2f;
+
+                    if (j == 0)
+                    {
+                        xyImage[i, j] = mittelPunkt_X+move_position;
+                    }
+                    if (j == 1)
+                    {
+                        xyImage[i, j] = mittelPunkt_Y;
+                    }
+                }
+                move_position += 40;
+            }
+
+            for (int i = 0; i < Connection.OwnHand.Count; i++) {
+                var img = Connection.OwnHand[i].GetImage();
+                var dblWidth = 80f;
+                var dblFac = dblWidth / (float)img.Width;
+                var dblHeight = dblFac * img.Height;
+               
+                g.DrawImage(img, new RectangleF(xyImage[i, 0], xyImage[i, 1],dblWidth, dblHeight));
+            }
+         
 		}
 
-		private void handPanel_MouseMove (object sender, MouseEventArgs e)
-		{
-
-		}
+        private void handPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+          
+        }
 
 		private void handPanel_MouseClick (object sender, MouseEventArgs e)
 		{
+            int mouseX = System.Windows.Forms.Cursor.Position.X;
+            int mouseY = System.Windows.Forms.Cursor.Position.Y - mainPanel.Height;
 
+          int  bild = checkImage(mouseX, mouseY);
+
+          MessageBox.Show("Zeichen : " + Connection.OwnHand[bild].Caption + "  Zahl :" + Connection.OwnHand[bild].Color);
 		}
 
 		#endregion
@@ -121,6 +160,36 @@ namespace Uno.Uno
 		{
 			Connection.Disconnect ();
 		}
+
+        public int checkImage(int wert1, int wert2) {
+           // int mouseX = System.Windows.Forms.Cursor.Position.X;
+           // int mouseY = System.Windows.Forms.Cursor.Position.Y;
+
+            int x = wert1;
+            int y = wert2;
+            int bild = -1;
+            for (int i = 0; i < Connection.OwnHand.Count; i++)
+            {
+                var img = Connection.OwnHand[i].GetImage();
+                var dblWidth = 80f;
+                var dblFac = dblWidth / (float)img.Width;
+                var dblHeight = dblFac * img.Height;
+              float test1=  xyImage[i, 0];
+              float test2 = xyImage[i, 0] + dblWidth;
+              float test3 = xyImage[i, 1];
+              float test4 = xyImage[i, 1] + dblHeight;
+
+              if (x >= xyImage[i, 0] && x <= xyImage[i, 0] + dblWidth && y >= xyImage[i,1] && y <= xyImage[i,1] + dblHeight)
+                {
+                    //println("Bild angeklickt:"+i);
+                    bild = i;
+                   // MessageBox.Show("" + bild);
+                }
+
+            }
+            return bild;
+        
+        }
 
 		#endregion
 
