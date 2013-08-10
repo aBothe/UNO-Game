@@ -116,6 +116,169 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="karten\BLACK\BACKCARD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLACK\FOUR_WILD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLACK\WILD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\DRAW_TWO.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\EIGHT.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\FIVE.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\FOUR.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\NINE.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\ONE.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\REVERSE.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\SEVEN.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\SIX.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\SKIP.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\THREE.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\TWO.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\BLUE\ZERO.Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\DRAW_TWO.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\EIGHT.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\FIVE.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\FOUR.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\NINE.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\ONE.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\REVERSE.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\SEVEN.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\SIX.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\SKIP.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\THREE.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\TWO.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\GREEN\ZERO.Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\DRAW_TWO.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\EIGHT.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\FIVE.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\FOUR.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\NINE.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\ONE.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\REVERSE.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\SEVEN.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\SIX.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\SKIP.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\THREE.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\TWO.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\RED\ZERO.Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\DRAW_TWO.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\EIGHT.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\FIVE.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\FOUR.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\NINE.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\ONE.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\REVERSE.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\SEVEN.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\SIX.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\SKIP.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\THREE.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\TWO.Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="karten\YELLOW\ZERO.Yellow.png" />
+  </ItemGroup>
 </Project>
