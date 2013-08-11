@@ -181,7 +181,7 @@ namespace Uno
 				} else {
 					// Uno: Vergisst ein Spieler seine vorletzte Karte mit Uno anzukündigen, und der nächste Spieler hat bereits seine Karte ausgespielt, so hat ersterer eine Karte zu ziehen.
 					DrawCard (p);
-					return;
+					return true;
 				}
 			}
 
