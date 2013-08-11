@@ -207,8 +207,9 @@ namespace Uno.Uno
 				var col = c.Color;
 
 				if (c.Color == CardColor.Black) {
-					//TODO: Den Nutzer nach einer Farbe fragen
-					col = CardColor.Red;
+					var chooser = new ColorChooser ();
+					chooser.ShowDialog (this);
+					col = chooser.SelectedColor;
 				}
 
 				Connection.PutCardOnStackTop (c, col);

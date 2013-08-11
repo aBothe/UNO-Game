@@ -201,14 +201,8 @@ namespace Uno
 					StepToNextPlayer ();
 					break;
 				case CardCaption.WishColor:
-					var chooser = new ColorChooser ();
-					chooser.ShowDialog ();
-					CurrentColor = chooser.SelectedColor;
 					break;
 				case CardCaption.Take4:
-					chooser = new ColorChooser ();
-					chooser.ShowDialog ();
-					CurrentColor = chooser.SelectedColor;
 					StepToNextPlayer ();
 					next = NextPlayer;
 					for (int i = 4; i > 0; i--)
