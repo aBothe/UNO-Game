@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Uno.Uno
+namespace Uno
 {
     public partial class ColorChooser : Form
     {
-        public CardColor selectedColor;
+        public CardColor SelectedColor;
 
         public ColorChooser()
         {
@@ -33,28 +33,28 @@ namespace Uno.Uno
 
         private void Bn_Red_Click(object sender, EventArgs e)
         {
-            selectedColor = CardColor.Red;
+            SelectedColor = CardColor.Red;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         private void Bn_Blue_Click(object sender, EventArgs e)
         {
-            selectedColor = CardColor.Blue;
+            SelectedColor = CardColor.Blue;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         private void Bn_Green_Click(object sender, EventArgs e)
         {
-            selectedColor = CardColor.Green;
+            SelectedColor = CardColor.Green;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         private void Bn_Yellow_Click(object sender, EventArgs e)
         {
-            selectedColor = CardColor.Yellow;
+            SelectedColor = CardColor.Yellow;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

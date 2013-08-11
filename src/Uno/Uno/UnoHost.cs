@@ -27,12 +27,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Uno.Game;
-using Uno.Uno;
 
 namespace Uno
 {
 	public class UnoHost : GameHost
 	{
+
 		#region Properties
 
 		public readonly CardDeck AvailableCards = new CardDeck ();
@@ -50,7 +50,6 @@ namespace Uno
 		public readonly Stack<Card> CardStack = new Stack<Card> ();
 		public bool ClockwiseDirection;
 		public CardColor CurrentColor;
-
 		bool PlayerDrewCard = false;
 
 		#region LowLevel
@@ -95,12 +94,12 @@ namespace Uno
 
 		#region Card logic
 
-		void StepToNextPlayer()
+		void StepToNextPlayer ()
 		{
 			PlayerDrewCard = false;
 			var i = GetPlayerIndex (NextPlayer);
 			if (ClockwiseDirection) {
-				if (i == -1 || i+1 >= PlayerCount){
+				if (i == -1 || i + 1 >= PlayerCount) {
 					NextPlayer = GetPlayerByIndex (0) as UnoPlayer;
 					return;
 				}
@@ -108,8 +107,8 @@ namespace Uno
 				NextPlayer = GetPlayerByIndex (i + 1) as UnoPlayer;
 
 			} else {
-				if (i == -1 || i-1 < 0){
-					NextPlayer = GetPlayerByIndex (PlayerCount-1) as UnoPlayer;
+				if (i == -1 || i - 1 < 0) {
+					NextPlayer = GetPlayerByIndex (PlayerCount - 1) as UnoPlayer;
 					return;
 				}
 
@@ -117,7 +116,7 @@ namespace Uno
 			}
 		}
 
-		void InformNewPlayer()
+		void InformNewPlayer ()
 		{
 			SendGameDataToPlayer (NextPlayer, new[] { (byte)UnoMessage.YouAreNext });
 		}
@@ -167,8 +166,7 @@ namespace Uno
 			CurrentColor = colorSelection;
 
 			if (p.CardCount == 0) {
-				if(p.PressedUnoButton)
-				{
+				if (p.PressedUnoButton) {
 					// Spieler hat gewonnen !
 					using (var ms = new MemoryStream())
 					using (var w = new BinaryWriter(ms)) {
@@ -176,43 +174,40 @@ namespace Uno
 						w.Write (p.Nick);
 					}
 
-					NoticeGameFinished(false);
+					NoticeGameFinished (false);
 					return true;
-				}
-				else
-				{
+				} else {
 					// Uno: Vergisst ein Spieler seine vorletzte Karte mit Uno anzukündigen, und der nächste Spieler hat bereits seine Karte ausgespielt, so hat ersterer eine Karte zu ziehen.
-					DrawCard(p);
+					DrawCard (p);
 				}
 			}
 
 			// Aktionskarten
-			switch(c.Caption)
-			{
+			switch (c.Caption) {
 				case CardCaption.Take2:
-					StepToNextPlayer();
+					StepToNextPlayer ();
 					var next = NextPlayer;
-					next.PutCard(AvailableCards.GiveCard());
-					next.PutCard(AvailableCards.GiveCard());
-					DistributeSpecificPlayerUpdate(next);
+					next.PutCard (AvailableCards.GiveCard ());
+					next.PutCard (AvailableCards.GiveCard ());
+					DistributeSpecificPlayerUpdate (next);
 					break;
 				case CardCaption.RevertDirectionAndNewColor:
 					ClockwiseDirection = !ClockwiseDirection;
 					break;
 				case CardCaption.SkipNextPlayer:
-					StepToNextPlayer();
+					StepToNextPlayer ();
 					break;
 				case CardCaption.WishColor:
-                    ColorChooser chooser = new ColorChooser();
-                    var result = chooser.ShowDialog();
-                     CurrentColor = (CardColor ) result;
-                     StepToNextPlayer();
+					var chooser = new ColorChooser ();
+					chooser.ShowDialog ();
+					CurrentColor = chooser.SelectedColor;
+					StepToNextPlayer ();
 					// Neue Farbe schon geschrieben
 					break;
 				case CardCaption.Take4:
-                     ColorChooser chooser1 = new ColorChooser();
-                    var result1 = chooser1.ShowDialog();
-                     CurrentColor = (CardColor ) result1;
+					chooser = new ColorChooser ();
+					chooser.ShowDialog ();
+					CurrentColor = chooser.SelectedColor;
 					StepToNextPlayer ();
 					next = NextPlayer;
 					for (int i = 4; i > 0; i--)
@@ -225,9 +220,9 @@ namespace Uno
 			}
 
 			// nächsten Spieler bestimmen
-			if(State != GameState.StartPlaying)
-				StepToNextPlayer();
-			InformNewPlayer();
+			if (State != GameState.StartPlaying)
+				StepToNextPlayer ();
+			InformNewPlayer ();
 
 			     
 			// Spieler über neue Kartenkonstellation informieren
@@ -243,7 +238,7 @@ namespace Uno
 		/// </summary>
 		public bool DrawCard (UnoPlayer p, bool sendupdate = true)
 		{
-			if (NextPlayer != p)
+			if (NextPlayer != p || PlayerDrewCard)
 				return false;
 
 			var c = AvailableCards.GiveCard ();
@@ -255,6 +250,9 @@ namespace Uno
 			if (sendupdate) {
 				DistributeSpecificPlayerUpdate (p);
 				DistributeGeneralPlayerUpdate ();
+
+				StepToNextPlayer ();
+				InformNewPlayer ();
 			}
 			PlayerDrewCard = true;
 
@@ -292,7 +290,7 @@ namespace Uno
 			(p as UnoPlayer).ReleaseHand ();
 
 			// Wenn p als nächster Spieler angedacht war, neuen Nachfolger bestimmen!
-			if (NextPlayer == p){
+			if (NextPlayer == p) {
 				StepToNextPlayer ();
 				InformNewPlayer ();
 			}
@@ -409,7 +407,7 @@ namespace Uno
 			}
 		}
 
-		public void DistributeGameStates()
+		public void DistributeGameStates ()
 		{
 			using (var ms = new MemoryStream())
 			using (var w = new BinaryWriter(ms)) {
@@ -421,7 +419,7 @@ namespace Uno
 				w.Write (ClockwiseDirection);
 				w.Write (NextPlayer.Nick);
 
-				SendGameDataToAllPlayers (ms.ToArray());
+				SendGameDataToAllPlayers (ms.ToArray ());
 			}
 		}
 	}

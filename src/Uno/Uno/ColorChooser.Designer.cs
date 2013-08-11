@@ -1,4 +1,4 @@
-﻿namespace Uno.Uno
+﻿namespace Uno
 {
     partial class ColorChooser
     {
