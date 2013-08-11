@@ -156,22 +156,36 @@ namespace Uno.Uno
 
 		private void handPanel_Paint (object sender, PaintEventArgs e)
 		{
+			var widthPerCard = HandCardWidth / 2;
+			var n = Connection.OwnHand.Count;
+
 			var g = e.Graphics;
-			int move_position = 0;
-			xyImage = new float[Connection.OwnHand.Count, 2];
+			var move_position = 0f;
+			xyImage = new float[n, 2];
 
 			var breite = (float)handPanel.Width;
 			var hoehe = (float)handPanel.Height;
 			var mittelPunkt_X = breite / 4f;
-			var mittelPunkt_Y = hoehe / 2f;
 
-			for (int i = 0; i < Connection.OwnHand.Count; i++) {
+			// Wenn man derart viele Karten auf der Hand hat, dass es die Breite des Panels ausfüllt,
+			if (n * widthPerCard > (breite - mittelPunkt_X)) {
+				//.. den Mittelpunkt nach links anpassen
+				mittelPunkt_X = breite - (n * widthPerCard);
+
+				// Wenn die Hand bis nach links aus dem Panel reicht, die Darstellungsbreite pro Karte anpassen
+				if (mittelPunkt_X < 0) {
+					mittelPunkt_X = 0;
+					widthPerCard = breite / n;
+				}
+			}
+
+			for (int i = 0; i < n; i++) {
 				var c = Connection.OwnHand [i];
 				var img = c.GetImage ();
 
 				xyImage [i, 0] = mittelPunkt_X + move_position;
-				xyImage [i, 1] = mittelPunkt_Y + (Connection.RecommendedCards.Contains(c) ? -15f : 0f);
-				move_position += 40;
+				xyImage [i, 1] = (Connection.RecommendedCards.Contains(c) ? 0f : 15f);
+				move_position += widthPerCard;
 
 				var dblFac = HandCardWidth / (float)img.Width;
 				var dblHeight = dblFac * img.Height;
