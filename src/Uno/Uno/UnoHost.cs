@@ -395,6 +395,7 @@ namespace Uno
 			}
 
 			if (errorMsg != null) {
+				w.Write ((byte)ClientMessage.GameData);
 				w.Write ((byte)UnoMessage.ActionNotAllowed);
 				w.Write (errorMsg);
 			}

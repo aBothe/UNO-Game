@@ -151,7 +151,9 @@ namespace Uno
 
 			switch (message) {
 				case UnoMessage.ActionNotAllowed:
-					MessageBox.Show (r.ReadString(),"Action not allowed!");
+					var t = r.ReadString ();
+					Field.BeginInvoke(new MethodInvoker(()=>
+					MessageBox.Show (t,"Action not allowed!")));
 					break;
 				case UnoMessage.GameStates:
 					CardsOnStack = (int)r.ReadByte ();
@@ -165,7 +167,9 @@ namespace Uno
 					NotifyPropChanged (UnoProperty.NextPlayer);
 					break;
 				case UnoMessage.GameFinished:
-					MessageBox.Show (r.ReadString()+" has won the game!","Game finished");
+					t = r.ReadString ();
+					Field.BeginInvoke(new MethodInvoker(()=>
+					MessageBox.Show (t+" has won the game!","Game finished")));
 					break;
 			}
 		}
