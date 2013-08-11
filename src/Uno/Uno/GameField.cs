@@ -12,7 +12,7 @@ namespace Uno.Uno
 {
 	public partial class GameField : Form
 	{
-        public float [,] xyImage;
+		public float[,] xyImage;
 
 		#region Properties
 
@@ -37,8 +37,16 @@ namespace Uno.Uno
 
 		#region Main panel
 
+		public const double TAU = 2 * Math.PI;
+		Font playerFont = SystemFonts.CaptionFont;
+		Font activePlayerFont;
+		Bitmap blankCardImage = Card.GetImage (CardCaption.None, CardColor.Black);
+
 		private void mainPanel_Paint (object sender, PaintEventArgs e)
 		{
+			if (activePlayerFont == null)
+				activePlayerFont = new Font (playerFont, FontStyle.Bold);
+
 			var g = e.Graphics;
 
 			var breite = (float)mainPanel.Width;
@@ -54,15 +62,46 @@ namespace Uno.Uno
 			var dblFac = dblWidth / (float)img.Width;
 			var dblHeight = dblFac * img.Height;
 
-			g.DrawImage (img, new RectangleF (mittelPunkt_X - dblWidth / 2f, mittelPunkt_Y - dblHeight / 2f, dblWidth, dblHeight));
+			g.DrawImage (img, new RectangleF (mittelPunkt_X - dblWidth / 2f, (mittelPunkt_Y + dblHeight) < hoehe ? mittelPunkt_Y : (hoehe - dblHeight), dblWidth, dblHeight));
 
 			// Andere Spieler kreisförmig um die Mitte anordnen, 
 			// wobei das Dreieck zwischen unterer linker, rechter Panelecke und Panelmittelpunkt ausgespart wird
 
 			// Den verfügbaren Kreisausschnitt um die Panelmitte berechnen (Erklärung - siehe Doku)
-			var gamma = 360.0 - 180.0 * Math.Acos (1.0-(Math.Pow(breite,2) / (2.0 * Math.Pow(mittelPunkt_Y,2.0) + 0.5 * Math.Pow(breite,2.0)))) / Math.PI;
+			var gamma = Math.Acos (1.0 - (Math.Pow (breite, 2) / (2.0 * Math.Pow (mittelPunkt_Y, 2.0) + 0.5 * Math.Pow (breite, 2.0))));
 
-			var winkelDistanz = gamma / (double)Connection.OtherPlayersHandSize.Count;
+			var numOtherPlayers = Connection.OtherPlayersHandSize.Count;
+			var winkelDistanz = (TAU - gamma) / (double)numOtherPlayers;
+
+			var radius = Math.Min (mittelPunkt_X, mittelPunkt_Y);
+			var phase = -Math.PI / 2 + gamma / 2;
+
+			dblWidth = 60f;
+			dblFac = dblWidth / (float)img.Width;
+			dblHeight = dblFac * img.Height;
+
+			var playerEnum = Connection.OtherPlayersHandSize.GetEnumerator ();
+			for (int i = 1; i < numOtherPlayers; i++) {
+				playerEnum.MoveNext ();
+				if (playerEnum.Current.Key == Connection.PlayerNick)
+					playerEnum.MoveNext ();
+				var kv = playerEnum.Current;
+
+				var p_X = mittelPunkt_X + radius * (float)Math.Cos (winkelDistanz * i + phase);
+				var p_Y = mittelPunkt_Y - radius * (float)Math.Sin (winkelDistanz * i + phase);
+
+				var f = kv.Key == Connection.CurrentPlayer ? activePlayerFont : playerFont;
+				var size = g.MeasureString (kv.Key, f);
+				g.DrawString (kv.Key, f, Brushes.Black, p_X - size.Width / 2, p_Y);
+
+				g.DrawImage (blankCardImage, p_X - dblWidth / 2, p_Y += size.Height, dblWidth, dblHeight);
+
+				var numString = kv.Value.ToString ();
+
+				size = g.MeasureString (numString, f);
+
+				g.DrawString (numString, f, Brushes.Black, p_X - size.Width / 2, p_Y + dblHeight / 2 - size.Height / 2);
+			}
 		}
 
 		public static Bitmap ResizeMe (Image srcImg, double dblWidth)
@@ -84,57 +123,82 @@ namespace Uno.Uno
 
 		#region Hand panel
 
+		const float HandCardWidth = 80f;
+
 		private void handPanel_Paint (object sender, PaintEventArgs e)
-        {
-            var g = e.Graphics;
-            int move_position = 0;
-            xyImage = new float[Connection.OwnHand.Count,2];
+		{
+			var g = e.Graphics;
+			int move_position = 0;
+			xyImage = new float[Connection.OwnHand.Count, 2];
 
-            for (int i = 0; i < Connection.OwnHand.Count; i++)
-            {
-                for (int j = 0; j < 2; j++) {
+			var breite = (float)handPanel.Width;
+			var hoehe = (float)handPanel.Height;
+			var mittelPunkt_X = breite / 4f;
+			var mittelPunkt_Y = hoehe / 2f;
 
-                    var breite = (float)handPanel.Width;
-                    var hoehe = (float)handPanel.Height;
-                    var mittelPunkt_X = breite / 4f;
-                    var mittelPunkt_Y = hoehe / 2f;
+			for (int i = 0; i < Connection.OwnHand.Count; i++) {
+				var c = Connection.OwnHand [i];
+				var img = c.GetImage ();
 
-                    if (j == 0)
-                    {
-                        xyImage[i, j] = mittelPunkt_X+move_position;
-                    }
-                    if (j == 1)
-                    {
-                        xyImage[i, j] = mittelPunkt_Y;
-                    }
-                }
-                move_position += 40;
-            }
+				xyImage [i, 0] = mittelPunkt_X + move_position;
+				xyImage [i, 1] = mittelPunkt_Y + (Connection.RecommendedCards.Contains(c) ? -15f : 0f);
+				move_position += 40;
 
-            for (int i = 0; i < Connection.OwnHand.Count; i++) {
-                var img = Connection.OwnHand[i].GetImage();
-                var dblWidth = 80f;
-                var dblFac = dblWidth / (float)img.Width;
-                var dblHeight = dblFac * img.Height;
-               
-                g.DrawImage(img, new RectangleF(xyImage[i, 0], xyImage[i, 1],dblWidth, dblHeight));
-            }
-         
+				var dblFac = HandCardWidth / (float)img.Width;
+				var dblHeight = dblFac * img.Height;
+
+				g.DrawImage (img, new RectangleF (xyImage [i, 0], xyImage [i, 1], HandCardWidth, dblHeight));
+			}
 		}
 
-        private void handPanel_MouseMove(object sender, MouseEventArgs e)
-        {
+		private void handPanel_MouseMove (object sender, MouseEventArgs e)
+		{
           
-        }
+		}
 
 		private void handPanel_MouseClick (object sender, MouseEventArgs e)
 		{
-            int mouseX = System.Windows.Forms.Cursor.Position.X;
-            int mouseY = System.Windows.Forms.Cursor.Position.Y - mainPanel.Height;
+			int bild = HitTestCard (e.Location);
+			if (bild != -1) {
+				var c = Connection.OwnHand [bild];
+				var col = c.Color;
 
-          int  bild = checkImage(mouseX, mouseY);
+				if (c.Color == CardColor.Black) {
+					//TODO: Den Nutzer nach einer Farbe fragen
+					col = CardColor.Red;
+				}
 
-          MessageBox.Show("Zeichen : " + Connection.OwnHand[bild].Caption + "  Zahl :" + Connection.OwnHand[bild].Color);
+				Connection.PutCardOnStackTop (c, col);
+				//MessageBox.Show ("Zeichen : " + Connection.OwnHand [bild].Caption + "  Zahl :" + Connection.OwnHand [bild].Color);
+			}
+		}
+
+		int HitTestCard (Point loc)
+		{
+			var x = loc.X;
+			var y = loc.Y;
+
+			int bild = -1;
+			for (int i = 0; i < Connection.OwnHand.Count; i++) {
+				var img = Connection.OwnHand [i].GetImage ();
+
+				var dblFac = HandCardWidth / (float)img.Width;
+				var dblHeight = dblFac * img.Height;
+
+				//float test1=  xyImage[i, 0];
+				float test2 = xyImage [i, 0] + HandCardWidth;
+				//float test3 = xyImage[i, 1];
+				//float test4 = xyImage[i, 1] + dblHeight;
+
+				if (x >= xyImage [i, 0] && x <= xyImage [i, 0] + HandCardWidth && y >= xyImage [i, 1] && y <= xyImage [i, 1] + dblHeight) {
+					//println("Bild angeklickt:"+i);
+					bild = i;
+					// MessageBox.Show("" + bild);
+				}
+
+			}
+			return bild;
+
 		}
 
 		#endregion
@@ -160,36 +224,6 @@ namespace Uno.Uno
 		{
 			Connection.Disconnect ();
 		}
-
-        public int checkImage(int wert1, int wert2) {
-           // int mouseX = System.Windows.Forms.Cursor.Position.X;
-           // int mouseY = System.Windows.Forms.Cursor.Position.Y;
-
-            int x = wert1;
-            int y = wert2;
-            int bild = -1;
-            for (int i = 0; i < Connection.OwnHand.Count; i++)
-            {
-                var img = Connection.OwnHand[i].GetImage();
-                var dblWidth = 80f;
-                var dblFac = dblWidth / (float)img.Width;
-                var dblHeight = dblFac * img.Height;
-              float test1=  xyImage[i, 0];
-              float test2 = xyImage[i, 0] + dblWidth;
-              float test3 = xyImage[i, 1];
-              float test4 = xyImage[i, 1] + dblHeight;
-
-              if (x >= xyImage[i, 0] && x <= xyImage[i, 0] + dblWidth && y >= xyImage[i,1] && y <= xyImage[i,1] + dblHeight)
-                {
-                    //println("Bild angeklickt:"+i);
-                    bild = i;
-                   // MessageBox.Show("" + bild);
-                }
-
-            }
-            return bild;
-        
-        }
 
 		#endregion
 

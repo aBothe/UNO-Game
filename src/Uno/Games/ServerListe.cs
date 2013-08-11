@@ -151,7 +151,8 @@ namespace Uno.Games
 			con.OtherPlayersHandSize ["b"]= 4;
 			con.OtherPlayersHandSize ["c"]= 5;
 			con.OtherPlayersHandSize ["d"]= 8;
-			con.CurrentPlayer = "c";
+			con.OtherPlayersHandSize ["e"]= 2;
+			con.CurrentPlayer = "b";
 			con.PlayerNick = "a";
 			con.OwnHand.Add (new Card (CardColor.Black, CardCaption.Take4));
 			con.OwnHand.Add (new Card (CardColor.Red, CardCaption.Five));
