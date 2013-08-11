@@ -162,6 +162,8 @@ namespace Uno
 			// auf den Stapel gelegter Karten legen.
 			CardStack.Push (c);
 
+			DistributeSpecificPlayerUpdate (p);
+
 			// Neue Farbe zuweisen. Ist niemals Black.
 			CurrentColor = colorSelection;
 
