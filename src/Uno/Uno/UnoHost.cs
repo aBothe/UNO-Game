@@ -210,6 +210,9 @@ namespace Uno
 					// Neue Farbe schon geschrieben
 					break;
 				case CardCaption.Take4:
+                     ColorChooser chooser1 = new ColorChooser();
+                    var result1 = chooser1.ShowDialog();
+                     CurrentColor = (CardColor ) result1;
 					StepToNextPlayer ();
 					next = NextPlayer;
 					for (int i = 4; i > 0; i--)

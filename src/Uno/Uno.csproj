@@ -54,6 +54,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Uno\ColorChooser.resx">
+      <DependentUpon>ColorChooser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Uno\GameField.resx">
       <DependentUpon>GameField.cs</DependentUpon>
     </EmbeddedResource>
@@ -68,6 +71,12 @@
     </Compile>
     <Compile Include="Uno\Card.cs" />
     <Compile Include="Uno\CardDeck.cs" />
+    <Compile Include="Uno\ColorChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Uno\ColorChooser.Designer.cs">
+      <DependentUpon>ColorChooser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Uno\GameField.cs">
       <SubType>Form</SubType>
     </Compile>
