@@ -245,6 +245,8 @@ namespace Uno
 				return false;
 			}
 
+			PlayerDrewCard = true;
+
 			if (sendupdate) {
 				DistributeSpecificPlayerUpdate (p);
 				DistributeGeneralPlayerUpdate ();
@@ -252,7 +254,6 @@ namespace Uno
 				StepToNextPlayer ();
 				InformNewPlayer ();
 			}
-			PlayerDrewCard = true;
 
 			return true;
 		}
