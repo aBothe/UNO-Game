@@ -548,7 +548,7 @@ namespace Uno.Game
 		/// <summary>
 		/// Notices the host engine that the game has been finished. Must be called by the Game in order to keep the flow consistent!
 		/// </summary>
-		protected void NoticeGameFinished(bool aborted = false)
+		protected virtual void NoticeGameFinished(bool aborted = false)
 		{
 			State = GameState.GameFinished;
 			SendToAllPlayers (new[] { (byte)ClientMessage.GameFinished, (byte)(aborted?1:0) });

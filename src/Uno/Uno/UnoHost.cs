@@ -418,6 +418,19 @@ namespace Uno
 				SendGameDataToAllPlayers (ms.ToArray ());
 			}
 		}
+
+		protected override void NoticeGameFinished (bool aborted)
+		{
+			using (var ms = new MemoryStream())
+			using (var w = new BinaryWriter(ms)) {
+
+				w.Write ((byte)UnoMessage.GameFinished);
+				w.Write (NextPlayer.Nick);
+
+				SendGameDataToAllPlayers (ms.ToArray ());
+			}
+			base.NoticeGameFinished (aborted);
+		}
 	}
 }
 
