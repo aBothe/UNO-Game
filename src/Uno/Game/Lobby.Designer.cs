@@ -56,6 +56,7 @@
 			this.button_StartGame.Size = new System.Drawing.Size(117, 23);
 			this.button_StartGame.TabIndex = 1;
 			this.button_StartGame.Text = "Start Game";
+			this.button_StartGame.Click += new System.EventHandler(this.button_StartGame_Click);
 			// 
 			// button_Ready
 			// 

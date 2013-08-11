@@ -26,14 +26,43 @@ namespace Uno.Uno
 		{
 			this.Connection = con;
 			InitializeComponent ();
+
+			con.PropertyChanged += PropChanged;
 		}
 
+		~GameField()
+		{
+			Connection.PropertyChanged -= PropChanged;
+		}
+
+		bool loaded;
 		private void GameField_Load (object sender, EventArgs e)
 		{
-
+			loaded = true;
 		}
 
 		#endregion
+
+		void PropChanged(UnoProperty prop)
+		{
+			if (!loaded)
+				return;
+
+			BeginInvoke (new MethodInvoker (() => {
+				switch (prop) {
+					case UnoProperty.OwnHand:
+						handPanel.Invalidate ();
+						break;
+					case UnoProperty.OtherGameStates:
+					case UnoProperty.OtherPlayersHandSize:
+						mainPanel.Invalidate ();
+						break;
+					case UnoProperty.NextPlayer:
+
+						break;
+				}
+			}));
+		}
 
 		#region Main panel
 

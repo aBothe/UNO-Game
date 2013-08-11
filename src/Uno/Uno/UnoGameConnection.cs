@@ -76,6 +76,9 @@ namespace Uno
 		#region Init/Exit handlers
 		void CloseFieldGUI()
 		{
+			if (Field == null)
+				return;
+
 			Field.Close();
 			Field.Dispose();
 			Field = null;
@@ -94,9 +97,10 @@ namespace Uno
 
 		protected override void OnGameStarted()
 		{
-			Field = new GameField (this);
-
-			base.OnGameStarted();
+			Program.MainForm.BeginInvoke (new MethodInvoker (() => {
+				Field = new GameField (this);
+				Field.Show ();
+			}));
 		}
 
 		protected override void OnOtherPlayerLeft(string nick)
@@ -109,7 +113,7 @@ namespace Uno
 
 		protected override void OnDisconnected(ClientMessage msg, string reason)
 		{
-			Field.BeginInvoke(new MethodInvoker(CloseFieldGUI));
+			Program.MainForm.BeginInvoke(new MethodInvoker(CloseFieldGUI));
 			base.OnDisconnected(msg, reason);
 		}
 		#endregion
@@ -173,11 +177,11 @@ namespace Uno
 
 		public void PutCardOnStackTop(Card c, CardColor color)
 		{
-			var d = new byte[1+2+ (c.Color == CardColor.Black ? 0 : 1)];
+			var d = new byte[1+2+ (c.Color == CardColor.Black ? 1 : 0)];
 			d [0] = (byte)UnoMessage.PutCard;
 			BitConverter.GetBytes (c.ToHash ()).CopyTo (d, 1);
 
-			if (c.Color != CardColor.Black)
+			if (c.Color == CardColor.Black)
 				d [3] = (byte)color;
 
 			SendGameData (d);

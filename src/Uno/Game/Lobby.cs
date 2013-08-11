@@ -73,7 +73,7 @@ namespace Uno.Game
 
 		void Connection_GameStarted()
 		{
-			Hide();
+			//Hide();
 		}
 
 		Lobby()
