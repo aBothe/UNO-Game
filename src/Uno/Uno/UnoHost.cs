@@ -201,8 +201,6 @@ namespace Uno
 					var chooser = new ColorChooser ();
 					chooser.ShowDialog ();
 					CurrentColor = chooser.SelectedColor;
-					StepToNextPlayer ();
-					// Neue Farbe schon geschrieben
 					break;
 				case CardCaption.Take4:
 					chooser = new ColorChooser ();
