@@ -140,8 +140,8 @@ namespace Uno.Games
 
 		private void Click_Refresh(object sender, EventArgs e)
 		{
-			//RefreshServerList();
-           
+			RefreshServerList();
+           /*
 			var con = new UnoGameConnection ();
 			con.CardsOnStack = 10;
 			con.TopMostCard = new Card (CardColor.Blue, CardCaption.Four);
@@ -162,7 +162,7 @@ namespace Uno.Games
 
 			var f = new GameField (con);
 
-			f.Show ();
+			f.Show ();*/
 		}
 		#endregion
 
