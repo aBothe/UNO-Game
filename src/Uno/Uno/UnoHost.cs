@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Uno.Game;
+using Uno.Uno;
 
 namespace Uno
 {
@@ -202,6 +203,10 @@ namespace Uno
 					StepToNextPlayer();
 					break;
 				case CardCaption.WishColor:
+                    ColorChooser chooser = new ColorChooser();
+                    var result = chooser.ShowDialog();
+                     CurrentColor = (CardColor ) result;
+                     StepToNextPlayer();
 					// Neue Farbe schon geschrieben
 					break;
 				case CardCaption.Take4:
