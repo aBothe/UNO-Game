@@ -59,7 +59,7 @@
             this.Bn_Red.Name = "Bn_Red";
             this.Bn_Red.Size = new System.Drawing.Size(75, 23);
             this.Bn_Red.TabIndex = 0;
-            this.Bn_Red.Text = "button1";
+            this.Bn_Red.Text = "Red";
             this.Bn_Red.UseVisualStyleBackColor = true;
             this.Bn_Red.Click += new System.EventHandler(this.Bn_Red_Click);
             // 
@@ -69,7 +69,7 @@
             this.Bn_Blue.Name = "Bn_Blue";
             this.Bn_Blue.Size = new System.Drawing.Size(75, 23);
             this.Bn_Blue.TabIndex = 1;
-            this.Bn_Blue.Text = "button2";
+            this.Bn_Blue.Text = "Blue";
             this.Bn_Blue.UseVisualStyleBackColor = true;
             this.Bn_Blue.Click += new System.EventHandler(this.Bn_Blue_Click);
             // 
@@ -79,7 +79,7 @@
             this.Bn_Green.Name = "Bn_Green";
             this.Bn_Green.Size = new System.Drawing.Size(75, 23);
             this.Bn_Green.TabIndex = 2;
-            this.Bn_Green.Text = "button3";
+            this.Bn_Green.Text = "Green";
             this.Bn_Green.UseVisualStyleBackColor = true;
             this.Bn_Green.Click += new System.EventHandler(this.Bn_Green_Click);
             // 
@@ -89,7 +89,7 @@
             this.Bn_Yellow.Name = "Bn_Yellow";
             this.Bn_Yellow.Size = new System.Drawing.Size(75, 23);
             this.Bn_Yellow.TabIndex = 3;
-            this.Bn_Yellow.Text = "button4";
+            this.Bn_Yellow.Text = "Yellow";
             this.Bn_Yellow.UseVisualStyleBackColor = true;
             this.Bn_Yellow.Click += new System.EventHandler(this.Bn_Yellow_Click);
             // 
