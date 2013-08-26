@@ -106,7 +106,8 @@ namespace Uno
 		protected override void OnOtherPlayerLeft(string nick)
 		{
 			OtherPlayersHandSize.Remove(nick);
-			PropertyChanged (UnoProperty.OtherPlayersHandSize);
+			if(PropertyChanged!=null)
+				PropertyChanged (UnoProperty.OtherPlayersHandSize);
 
 			base.OnOtherPlayerLeft(nick);
 		}
